@@ -12,6 +12,7 @@
 
 @property (nonatomic) NSInteger day;
 @property (nonatomic) BOOL isCurrent;
+@property (nonatomic) BOOL isStroke;
 @property (nonatomic) UIColor *lineColor;
 @property (nonatomic) UIColor *textColor;
 @property (nonatomic) CGFloat fontSize;

@@ -16,6 +16,7 @@
 @property (nonatomic) NSInteger rowTotal;//number of row
 @property (nonatomic) NSInteger cellWidth;//with of cell
 @property (nonatomic) NSInteger cellHeight;//height of cell
+@property (nonatomic) NSInteger headerHeight;//height of header
 
 @end
 
@@ -41,14 +42,18 @@
     self.rowTotal = 5;
     self.colPadding = 2;
     self.rowPadding = 2;
-    self.cellWidth = 40;
-    self.cellHeight = 50;
+    self.headerHeight = 60;
+    
+    self.cellWidth = (self.frame.size.width - (self.colPadding * self.colTotal)) / self.colTotal;
+    self.cellHeight = (self.frame.size.height - self.headerHeight - (self.rowPadding * self.rowTotal)) / self.rowTotal;
 }
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    
+    
     UIView *superView = self.superview;
     NSInteger totalWidth = 320;
     if (superView){
@@ -58,7 +63,7 @@
     for (int i = 0; i < self.rowTotal; ++i) {
         for (int j = 0; j < self.colTotal; ++j) {
             NSInteger x = (self.cellWidth + self.colPadding ) * j + colOffset;
-            NSInteger y = (self.cellHeight + self.rowPadding ) * i;
+            NSInteger y = (self.cellHeight + self.rowPadding ) * i + self.headerHeight;
             WKCalendarViewCell *cell = [[WKCalendarViewCell alloc] initWithFrame:(CGRect){
                 x,
                 y,

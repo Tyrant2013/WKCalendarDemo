@@ -21,6 +21,9 @@
 		EB68C57219BEA8A80017E28F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55419BEA8A80017E28F /* UIKit.framework */; };
 		EB68C57A19BEA8A80017E28F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB68C57819BEA8A80017E28F /* InfoPlist.strings */; };
 		EB68C57C19BEA8A80017E28F /* WKCalendarDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C57B19BEA8A80017E28F /* WKCalendarDemoTests.m */; };
+		EB68C58819BEAA4C0017E28F /* WKCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58719BEAA4C0017E28F /* WKCalendar.m */; };
+		EB68C58B19BEAA680017E28F /* WKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58A19BEAA680017E28F /* WKCalendarView.m */; };
+		EB68C58E19BEAEBA0017E28F /* WKCalendarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,12 @@
 		EB68C57719BEA8A80017E28F /* WKCalendarDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WKCalendarDemoTests-Info.plist"; sourceTree = "<group>"; };
 		EB68C57919BEA8A80017E28F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EB68C57B19BEA8A80017E28F /* WKCalendarDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKCalendarDemoTests.m; sourceTree = "<group>"; };
+		EB68C58619BEAA4C0017E28F /* WKCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendar.h; path = WKCalendar/WKCalendar.h; sourceTree = "<group>"; };
+		EB68C58719BEAA4C0017E28F /* WKCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendar.m; path = WKCalendar/WKCalendar.m; sourceTree = "<group>"; };
+		EB68C58919BEAA680017E28F /* WKCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarView.h; path = WKCalendar/WKCalendarView.h; sourceTree = "<group>"; };
+		EB68C58A19BEAA680017E28F /* WKCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarView.m; path = WKCalendar/WKCalendarView.m; sourceTree = "<group>"; };
+		EB68C58C19BEAEBA0017E28F /* WKCalendarViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarViewCell.h; path = WKCalendar/WKCalendarViewCell.h; sourceTree = "<group>"; };
+		EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarViewCell.m; path = WKCalendar/WKCalendarViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +91,7 @@
 		EB68C54419BEA8A80017E28F = {
 			isa = PBXGroup;
 			children = (
+				EB68C58519BEAA140017E28F /* WKCalendar */,
 				EB68C55619BEA8A80017E28F /* WKCalendarDemo */,
 				EB68C57519BEA8A80017E28F /* WKCalendarDemoTests */,
 				EB68C54F19BEA8A80017E28F /* Frameworks */,
@@ -150,6 +160,19 @@
 				EB68C57819BEA8A80017E28F /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EB68C58519BEAA140017E28F /* WKCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				EB68C58619BEAA4C0017E28F /* WKCalendar.h */,
+				EB68C58719BEAA4C0017E28F /* WKCalendar.m */,
+				EB68C58919BEAA680017E28F /* WKCalendarView.h */,
+				EB68C58A19BEAA680017E28F /* WKCalendarView.m */,
+				EB68C58C19BEAEBA0017E28F /* WKCalendarViewCell.h */,
+				EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */,
+			);
+			name = WKCalendar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,7 +274,10 @@
 			files = (
 				EB68C56719BEA8A80017E28F /* ViewController.m in Sources */,
 				EB68C56119BEA8A80017E28F /* AppDelegate.m in Sources */,
+				EB68C58B19BEAA680017E28F /* WKCalendarView.m in Sources */,
 				EB68C55D19BEA8A80017E28F /* main.m in Sources */,
+				EB68C58E19BEAEBA0017E28F /* WKCalendarViewCell.m in Sources */,
+				EB68C58819BEAA4C0017E28F /* WKCalendar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
