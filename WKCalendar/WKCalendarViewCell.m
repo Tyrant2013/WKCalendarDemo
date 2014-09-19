@@ -31,18 +31,26 @@
     self.isStroke = NO;
 }
 
+- (void)setIsSelected:(BOOL)isSelected
+{
+    _isSelected = isSelected;
+    
+    [self setNeedsDisplay];
+}
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    [self addRect:context size:rect.size];
+//    [self addRect:context size:rect.size];
     
-    [self setLinearGradient:context rect:rect];
+//    [self setLinearGradient:context rect:rect];
+    
+    [self addCirle:context size:rect.size];
     
     [self addText:context rect:rect];
-    
 }
 
 - (void)addShadowColor:(CGContextRef)context
@@ -52,7 +60,7 @@
 
 - (void)setLinearGradient:(CGContextRef)context rect:(CGRect)rect
 {
-    UIColor *startColor = UIColor.lightGrayColor;
+    UIColor *startColor = [UIColor colorWithRed:221/255 green:221/255 blue:221/255 alpha:1.0f];
     CGFloat *startColorComponent = (CGFloat *)CGColorGetComponents(startColor.CGColor);
     
     UIColor *endColor = UIColor.grayColor;
@@ -98,8 +106,31 @@
     CGPathRelease(path);
 }
 
+- (void)addCirle:(CGContextRef)context size:(CGSize)size
+{
+    [UIColor.lightGrayColor set];
+    if (self.isSelected)
+    {
+        [UIColor.yellowColor set];
+    }
+    if (self.isCurrentDay)
+    {
+        [UIColor.redColor set];
+    }
+    CGContextFillEllipseInRect(context, (CGRect){0, 0, size});
+}
+
 - (void)addText:(CGContextRef)context rect:(CGRect)rect
 {
+    UIColor *textColor = self.textColor;
+    if (self.isSelected)
+    {
+        textColor = UIColor.blackColor;
+    }
+    if (self.isCurrentDay)
+    {
+        textColor = UIColor.whiteColor;
+    }
     NSString *text = [NSString stringWithFormat:@"%d", self.day];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
@@ -107,12 +138,13 @@
     NSMutableDictionary *attrsDic = [[NSMutableDictionary alloc] init];
     attrsDic[NSFontAttributeName] = [UIFont systemFontOfSize:self.fontSize];
     attrsDic[NSParagraphStyleAttributeName] = paragraphStyle;
-    attrsDic[NSForegroundColorAttributeName] = self.textColor;
+    attrsDic[NSForegroundColorAttributeName] = textColor;
     if (self.isStroke)
     {
         attrsDic[NSStrokeColorAttributeName] = self.textColor;
         attrsDic[NSStrokeWidthAttributeName] = @(2.0f);
     }
+    rect.origin.y = rect.size.height / 4;
     [text drawInRect:rect withAttributes:attrsDic];
 }
 

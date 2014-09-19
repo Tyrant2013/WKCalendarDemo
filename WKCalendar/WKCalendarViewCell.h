@@ -17,5 +17,7 @@
 @property (nonatomic) UIColor *textColor;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) UIFont *font;
+@property (nonatomic) BOOL isSelected;
+@property (nonatomic) BOOL isCurrentDay;
 
 @end

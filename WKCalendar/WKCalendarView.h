@@ -15,6 +15,14 @@
 @property (nonatomic) NSInteger colPadding;//horizon padding between cell
 @property (nonatomic) NSInteger rowPadding;//vertical padding between cell
 
+@property (nonatomic) NSInteger beginYear;
+@property (nonatomic) NSInteger beginMonth;
+@property (nonatomic) NSInteger beginDay;
+
+@property (nonatomic) NSInteger endYear;
+@property (nonatomic) NSInteger endMonth;
+@property (nonatomic) NSInteger endDay;
+
 @end
 
 

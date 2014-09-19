@@ -20,7 +20,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = UIColor.whiteColor;
-    WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){0,20,320,240}];
+    WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){10,100,300,240}];
     [self.view addSubview:calendar];
 //    calendar.backgroundColor = UIColor.whiteColor;
 }
