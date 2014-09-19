@@ -25,10 +25,12 @@
     self.backgroundColor = UIColor.whiteColor;
     self.lineColor = UIColor.lightGrayColor;
     self.fontSize = 12.0f;
-    self.isCurrent = YES;
     self.day = 1;
     self.textColor = UIColor.redColor;
     self.isStroke = NO;
+    self.isWorkday = YES;
+    self.isSelected = NO;
+    self.isCurrentDay = NO;
 }
 
 - (void)setIsSelected:(BOOL)isSelected
@@ -108,7 +110,11 @@
 
 - (void)addCirle:(CGContextRef)context size:(CGSize)size
 {
-    [UIColor.lightGrayColor set];
+    [[UIColor colorWithRed:125/255 green:125/255 blue:125/255 alpha:0.3f] set];
+    if (!self.isWorkday)
+    {
+        [[UIColor colorWithRed:125/255 green:125/255 blue:125/255 alpha:0.1f] set];
+    }
     if (self.isSelected)
     {
         [UIColor.yellowColor set];

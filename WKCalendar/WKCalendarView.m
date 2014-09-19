@@ -160,6 +160,7 @@
                 self.cellWidth,
                 self.cellHeight
             }];
+            cell.isWorkday = !(j == 0 || j == 6);
             cell.isCurrentDay = day == self.currentDay && self.year == self.currentYear && self.month == self.currentMonth;
             cell.isSelected = day >= 19;
             cell.day = day;

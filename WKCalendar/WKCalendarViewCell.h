@@ -11,7 +11,6 @@
 @interface WKCalendarViewCell : UIView
 
 @property (nonatomic) NSInteger day;
-@property (nonatomic) BOOL isCurrent;
 @property (nonatomic) BOOL isStroke;
 @property (nonatomic) UIColor *lineColor;
 @property (nonatomic) UIColor *textColor;
@@ -19,5 +18,6 @@
 @property (nonatomic) UIFont *font;
 @property (nonatomic) BOOL isSelected;
 @property (nonatomic) BOOL isCurrentDay;
+@property (nonatomic) BOOL isWorkday;
 
 @end
