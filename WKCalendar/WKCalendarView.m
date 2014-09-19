@@ -89,11 +89,26 @@
     
     NSInteger colOffset = (totalWidth - (self.colTotal * (self.cellWidth + self.colPadding) - self.colPadding)) / 2;
     
+    [self addShadow];
+    
     [self addTitleInfomation:context offset:colOffset];
     
     [self addWeekdays:context offset:colOffset];
     
     [self addDayPanel:context offset:colOffset rect:rect];
+}
+
+//添加阴影
+- (void)addShadow
+{
+    CALayer *shadow = [CALayer layer];
+    shadow.frame = self.bounds;
+    shadow.shadowColor = UIColor.lightGrayColor.CGColor;
+    shadow.shadowOffset = (CGSize){10, 10};
+    shadow.shadowOpacity = 0.8f;
+    shadow.shadowRadius = 10.0f;
+    
+    [self.layer addSublayer:shadow];
 }
 
 //添加头部信息
@@ -131,7 +146,7 @@
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     dic[NSFontAttributeName] = [UIFont systemFontOfSize:12];
     dic[NSParagraphStyleAttributeName] = paragraphStyle;
-    NSInteger fontHeight = 16;
+    NSInteger fontHeight = 20;
     for (int i = 0; i < weekDays.count; ++i) {
         NSInteger x = (self.cellWidth + self.colPadding) * i + colOffset;
         NSString *item = weekDays[i];
@@ -169,8 +184,8 @@
         }
         if (i == 0)
         {
-            CGContextMoveToPoint(context, colOffset, y - self.rowPadding / 2);
-            CGContextAddLineToPoint(context, rect.size.width - colOffset, y - self.rowPadding / 2);
+            CGContextMoveToPoint(context, colOffset, y - self.rowPadding);
+            CGContextAddLineToPoint(context, rect.size.width - colOffset, y - self.rowPadding);
         }
     }
     CGContextStrokePath(context);
