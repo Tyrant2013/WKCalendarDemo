@@ -20,6 +20,7 @@
 @property (nonatomic) NSInteger headerTotalHeight;//height of header
 @property (nonatomic) NSInteger heaerResultHeight;//selection result;
 @property (nonatomic) NSDictionary *weekDaysChinese;
+@property (nonatomic) BOOL isShowAnimation;
 
 @property (nonatomic) NSInteger currentDay;
 @property (nonatomic) NSInteger currentMonth;
@@ -54,6 +55,7 @@
     self.clipsToBounds = YES;
     
     _resultType = WKCalendarViewTypeDouble;
+    _isShowAnimation = NO;
     _calendar = [[WKCalendar alloc] init];
     self.colTotal = 7;
     self.rowTotal = 5;
@@ -88,7 +90,15 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    
+//    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+//    [self.layer renderInContext:context];
+//    UIImage *startImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIImageView *startView = [[UIImageView alloc] initWithImage:startImage];
+//    UIGraphicsEndImageContext();
     
     NSInteger totalWidth = CGRectGetWidth(self.frame);
     
@@ -105,6 +115,17 @@
     [self addWeekdays:context offset:colOffset];
     
     [self addDayPanel:context offset:colOffset rect:rect];
+    
+//    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+//    [self.layer renderInContext:context];
+//    UIImage *endImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIImageView *endView = [[UIImageView alloc] initWithImage:endImage];
+//    UIGraphicsEndImageContext();
+    
+//    if (self.isShowAnimation)
+//    {
+//        [self swapTwoMonthView:startView endView:endView];
+//    }
 }
 
 //添加阴影
@@ -301,6 +322,7 @@
         self.month = 12;
         --self.year;
     }
+    self.isShowAnimation = YES;
     [self setNeedsDisplay];
 }
 
@@ -312,6 +334,7 @@
         self.month = 1;
         ++self.year;
     }
+    self.isShowAnimation = YES;
     [self setNeedsDisplay];
 }
 
@@ -518,6 +541,26 @@
         self.endDay = self.beginDay - self.endDay;
         self.beginDay = self.beginDay - self.endDay;
     }
+}
+
+- (void)swapTwoMonthView:(UIView *)startView endView:(UIView *)endView
+{
+    if (!self.isShowAnimation) return;
+    [self addSubview:startView];
+    [self addSubview:endView];
+    CGRect srcFrame = startView.frame;
+    CGRect dstFrame = endView.frame;
+    endView.frame = CGRectOffset(dstFrame, dstFrame.size.width, 0);
+    
+    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.0 initialSpringVelocity:0.8 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        startView.frame = CGRectOffset(srcFrame, -srcFrame.size.width, 0);
+        endView.frame = dstFrame;
+    } completion:^(BOOL finished) {
+        [startView removeFromSuperview];
+        [endView removeFromSuperview];
+    }];
+    
+    self.isShowAnimation = NO;
 }
 
 @end
