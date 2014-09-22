@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "WKCalendarViewCell.h"
 
+typedef NS_ENUM(NSInteger, WKCalendarViewType)
+{
+    WKCalendarViewTypeSimple,
+    WKCalendarViewTypeDouble
+};
+
 @interface WKCalendarView : UIView
 
 @property (nonatomic, weak) id delegate;
+@property (nonatomic) WKCalendarViewType resultType;
 @property (nonatomic) NSInteger colPadding;//horizon padding between cell
 @property (nonatomic) NSInteger rowPadding;//vertical padding between cell
 
@@ -29,6 +36,6 @@
 @protocol WKCalendarViewDelegate
 
 @optional
-- (void)calendarView:(WKCalendarView *)calendarView didSelectedWithIndex:(NSIndexPath *)indexPath;
+- (void)calendarView:(WKCalendarView *)calendarView didSelectedStartDate:(NSString *)startDate endDate:(NSString *)endDate;
 
 @end

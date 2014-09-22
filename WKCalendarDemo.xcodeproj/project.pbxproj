@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB50AC4019D0192B004EE10B /* ArrowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EB50AC3F19D0192B004EE10B /* ArrowButton.m */; };
 		EB68C55119BEA8A80017E28F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55019BEA8A80017E28F /* Foundation.framework */; };
 		EB68C55319BEA8A80017E28F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55219BEA8A80017E28F /* CoreGraphics.framework */; };
 		EB68C55519BEA8A80017E28F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55419BEA8A80017E28F /* UIKit.framework */; };
@@ -37,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB50AC3E19D0192B004EE10B /* ArrowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArrowButton.h; path = WKCalendar/ArrowButton.h; sourceTree = "<group>"; };
+		EB50AC3F19D0192B004EE10B /* ArrowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ArrowButton.m; path = WKCalendar/ArrowButton.m; sourceTree = "<group>"; };
 		EB68C54D19BEA8A80017E28F /* WKCalendarDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WKCalendarDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB68C55019BEA8A80017E28F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EB68C55219BEA8A80017E28F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -171,6 +174,8 @@
 				EB68C58A19BEAA680017E28F /* WKCalendarView.m */,
 				EB68C58C19BEAEBA0017E28F /* WKCalendarViewCell.h */,
 				EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */,
+				EB50AC3E19D0192B004EE10B /* ArrowButton.h */,
+				EB50AC3F19D0192B004EE10B /* ArrowButton.m */,
 			);
 			name = WKCalendar;
 			sourceTree = "<group>";
@@ -272,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB50AC4019D0192B004EE10B /* ArrowButton.m in Sources */,
 				EB68C56719BEA8A80017E28F /* ViewController.m in Sources */,
 				EB68C56119BEA8A80017E28F /* AppDelegate.m in Sources */,
 				EB68C58B19BEAA680017E28F /* WKCalendarView.m in Sources */,
@@ -482,6 +488,7 @@
 				EB68C58119BEA8A80017E28F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EB68C58219BEA8A80017E28F /* Build configuration list for PBXNativeTarget "WKCalendarDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -490,6 +497,7 @@
 				EB68C58419BEA8A80017E28F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
