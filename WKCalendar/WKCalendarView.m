@@ -106,12 +106,17 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
     swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
     [self addGestureRecognizer:swipeUpGesture];
+    
+    UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    [self addGestureRecognizer:swipeDownGesture];
 }
 
 - (void)swipeGesture:(UISwipeGestureRecognizer *)gesture
 {
     switch (gesture.direction) {
         case UISwipeGestureRecognizerDirectionDown:
+            [self showYearViewForSelected];
             break;
         case UISwipeGestureRecognizerDirectionLeft:
             [self preMonth:nil];
