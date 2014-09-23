@@ -84,6 +84,30 @@
     self.currentDay = components.day;
     self.currentMonth = components.month;
     self.currentYear = components.year;
+    
+    UISwipeGestureRecognizer *swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self addGestureRecognizer:swipeRightGesture];
+    
+    UISwipeGestureRecognizer *swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self addGestureRecognizer:swipeLeftGesture];
+}
+
+- (void)swipeGesture:(UISwipeGestureRecognizer *)gesture
+{
+    switch (gesture.direction) {
+        case UISwipeGestureRecognizerDirectionDown:
+            break;
+        case UISwipeGestureRecognizerDirectionLeft:
+            [self preMonth:nil];
+            break;
+        case UISwipeGestureRecognizerDirectionRight:
+            [self nextMonth:nil];
+            break;
+        case UISwipeGestureRecognizerDirectionUp:
+            break;
+    }
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -259,11 +283,11 @@
         switch (self.resultType)
         {
             case WKCalendarViewTypeSimple:
-                startDate = [NSString stringWithFormat:@"%d-%d-%d", self.beginYear, self.beginMonth, self.beginDay];
-                endDate = [NSString stringWithFormat:@"%d-%d-%d", self.endYear, self.endMonth, self.endDay];
+                startDate = endDate = [NSString stringWithFormat:@"%d-%d-%d", self.year, self.month, self.day];
                 break;
             case WKCalendarViewTypeDouble:
-                startDate = endDate = [NSString stringWithFormat:@"%d-%d-%d", self.year, self.month, self.day];
+                startDate = [NSString stringWithFormat:@"%d-%d-%d", self.beginYear, self.beginMonth, self.beginDay];
+                endDate = [NSString stringWithFormat:@"%d-%d-%d", self.endYear, self.endMonth, self.endDay];
                 break;
         }
         [self.delegate calendarView:self didSelectedStartDate:startDate endDate:endDate];
@@ -329,7 +353,7 @@
     oldMonthView.backgroundColor = UIColor.whiteColor;
     oldMonthView.layer.zPosition = 1024;
     [self addSubview:oldMonthView];
-    [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    [UIView animateWithDuration:0.25f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         oldMonthView.frame = CGRectOffset(oldMonthView.frame, (isLeft ? -1 : 1) * oldMonthView.frame.size.width, 0);
     } completion:^(BOOL finished) {
         [oldMonthView removeFromSuperview];
