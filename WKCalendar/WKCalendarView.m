@@ -9,6 +9,16 @@
 #import "WKCalendarView.h"
 #import "WKCalendar.h"
 #import "ArrowButton.h"
+#import "WKMonthView.h"
+#import "WKYearView.h"
+
+typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
+{
+    WKCalendarAnimationDirectionUp,
+    WKCalendarAnimationDirectionRight,
+    WKCalendarAnimationDirectionDown,
+    WKCalendarAnimationDirectionLeft
+};
 
 @interface WKCalendarView()
 
@@ -92,6 +102,10 @@
     UISwipeGestureRecognizer *swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
     swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [self addGestureRecognizer:swipeLeftGesture];
+    
+    UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
+    [self addGestureRecognizer:swipeUpGesture];
 }
 
 - (void)swipeGesture:(UISwipeGestureRecognizer *)gesture
@@ -106,6 +120,7 @@
             [self nextMonth:nil];
             break;
         case UISwipeGestureRecognizerDirectionUp:
+            [self showMonthViewForSelected];
             break;
     }
 }
@@ -328,9 +343,8 @@
         --self.year;
     }
     self.isShowAnimation = YES;
-    UIView *beforeView = [self snapshotViewAfterScreenUpdates:NO];
-    [self setNeedsDisplay];
-    [self beginAnimationForSwapMonth:beforeView isLeft:YES];
+
+    [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionLeft];
 }
 
 - (void)nextMonth:(UIButton *)button
@@ -342,19 +356,38 @@
         ++self.year;
     }
     self.isShowAnimation = YES;
-    UIView *beforeView = [self snapshotViewAfterScreenUpdates:NO];
-    [self setNeedsDisplay];
     
-    [self beginAnimationForSwapMonth:beforeView isLeft:NO];
+    [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionRight];
 }
 
-- (void)beginAnimationForSwapMonth:(UIView *)oldMonthView isLeft:(BOOL)isLeft
+- (void)beginAnimationForSwapMonth:(UIView *)oldMonthView direction:(WKCalendarAnimationDirection)direction
 {
+    if (oldMonthView == nil)
+    {
+        oldMonthView = [self snapshotViewAfterScreenUpdates:NO];
+        [self setNeedsDisplay];
+    }
     oldMonthView.backgroundColor = UIColor.whiteColor;
     oldMonthView.layer.zPosition = 1024;
+    CGRect frame = oldMonthView.frame;
     [self addSubview:oldMonthView];
-    [UIView animateWithDuration:0.25f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        oldMonthView.frame = CGRectOffset(oldMonthView.frame, (isLeft ? -1 : 1) * oldMonthView.frame.size.width, 0);
+    switch (direction)
+    {
+        case WKCalendarAnimationDirectionDown:
+            frame = CGRectOffset(frame, 0, frame.size.height);
+            break;
+        case WKCalendarAnimationDirectionLeft:
+            frame = CGRectOffset(frame, -frame.size.width, 0);
+            break;
+        case WKCalendarAnimationDirectionRight:
+            frame = CGRectOffset(frame, frame.size.width, 0);
+            break;
+        case WKCalendarAnimationDirectionUp:
+            frame = CGRectOffset(frame, 0, -frame.size.height);
+            break;
+    }
+    [UIView animateWithDuration:0.3f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        oldMonthView.frame = frame;
     } completion:^(BOOL finished) {
         [oldMonthView removeFromSuperview];
     }];
@@ -363,24 +396,57 @@
 //添加年月信息
 - (void)addTitleInfomation:(CGContextRef)context offset:(NSInteger)colOffset
 {
-    CGContextSaveGState(context);
-    CGFloat x = 44 + colOffset;
+//    CGContextSaveGState(context);
+//    CGFloat x = 44 + colOffset;
+//    CGFloat y = self.heaerResultHeight + 5;
+//    NSInteger width = self.frame.size.width - x * 2 - colOffset * 2;
+//    NSInteger height = 20;
+//    
+//    NSString *yearMonth = [NSString stringWithFormat:@"%d 年 %d 月", self.year, self.month];
+//    
+//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//    paragraphStyle.alignment = NSTextAlignmentCenter;
+//    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+//    dic[NSParagraphStyleAttributeName] = paragraphStyle;
+//    dic[NSFontAttributeName] = [UIFont systemFontOfSize:18];
+//    
+//    CGRect frame = (CGRect){x, y, width, height};
+//    [yearMonth drawInRect:frame withAttributes:dic];
+//    
+//    CGContextRestoreGState(context);
+    CGFloat x = 45;
     CGFloat y = self.heaerResultHeight + 5;
-    NSInteger width = self.frame.size.width - x * 2 - colOffset * 2;
-    NSInteger height = 20;
+    CGFloat width = (self.frame.size.width - 88) / 2 - 1;
+    CGFloat height = 20;
+    UIButton *yearButton = (UIButton *)[self viewWithTag:1101];
+    if (!yearButton)
+    {
+        yearButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        yearButton.frame = (CGRect){x, y, width, height};
+        yearButton.tag = 1101;
+        yearButton.titleLabel.textAlignment = NSTextAlignmentRight;
+        [yearButton addTarget:self action:@selector(showYearViewForSelected) forControlEvents:UIControlEventTouchUpInside];
+        yearButton.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+        yearButton.layer.borderWidth = 1.0f;
+        [self addSubview:yearButton];
+    }
+
+    x += width;
+    UIButton *monthButton = (UIButton *)[self viewWithTag:1102];
+    if (!monthButton)
+    {
+        monthButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        monthButton.frame = (CGRect){x, y, width, height};
+        monthButton.tag = 1102;
+        monthButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+        [monthButton addTarget:self action:@selector(showMonthViewForSelected) forControlEvents:UIControlEventTouchUpInside];
+        monthButton.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+        monthButton.layer.borderWidth = 1.0f;
+        [self addSubview:monthButton];
+    }
     
-    NSString *yearMonth = [NSString stringWithFormat:@"%d 年 %d 月", self.year, self.month];
-    
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.alignment = NSTextAlignmentCenter;
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    dic[NSParagraphStyleAttributeName] = paragraphStyle;
-    dic[NSFontAttributeName] = [UIFont systemFontOfSize:18];
-    
-    CGRect frame = (CGRect){x, y, width, height};
-    [yearMonth drawInRect:frame withAttributes:dic];
-    
-    CGContextRestoreGState(context);
+    [yearButton setTitle:[NSString stringWithFormat:@"%d 年",self.year] forState:UIControlStateNormal];
+    [monthButton setTitle:[NSString stringWithFormat:@"%d 月", self.month] forState:UIControlStateNormal];
 }
 
 //添加星期行
@@ -652,6 +718,49 @@
     dateComponents.year = year;
     
     return [[NSCalendar currentCalendar] dateFromComponents:dateComponents];
+}
+
+- (void)showMonthViewForSelected
+{
+    if ([self viewWithTag:666])
+    {
+        WKMonthView *monthView = (WKMonthView *)[self viewWithTag:666];
+        [monthView hiddenFromViewWithMonth:self.month];
+    }
+    else
+    {
+        WKMonthView *monthView = [[WKMonthView alloc] initWithFrame:(CGRect){0, self.headerTotalHeight - 20, self.frame.size.width, self.frame.size.height - self.headerTotalHeight + 20}];
+        monthView.tag = 666;
+        monthView.layer.zPosition = 1110;
+        monthView.selectedMonth = self.month;
+        monthView.didSelectedMonth = ^(NSInteger month){
+            if (month == self.month) return;
+            self.month = month;
+            [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionUp];
+        };
+        [monthView showInView:self];
+    }
+}
+
+- (void)showYearViewForSelected
+{
+    if ([self viewWithTag:555])
+    {
+        WKYearView *yearView = (WKYearView *)[self viewWithTag:555];
+        [yearView hiddenFromViewWithYear:self.year];
+    }
+    else
+    {
+        WKYearView *yearView = [[WKYearView alloc] initWithFrame:(CGRect){0, self.headerTotalHeight - 20, self.frame.size.width, self.frame.size.height - self.headerTotalHeight + 20} year:self.year];
+        yearView.tag = 555;
+        yearView.layer.zPosition = 1110;
+        yearView.didSelectedWithYear = ^(NSInteger year){
+            if (year == self.year) return;
+            self.year = year;
+            [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionDown];
+        };
+        [yearView showInView:self];
+    }
 }
 
 @end
