@@ -31,6 +31,7 @@
     self.isWorkday = YES;
     self.isSelected = NO;
     self.isCurrentDay = NO;
+    self.isCurrentMonthDay = YES;
 }
 
 - (void)setIsSelected:(BOOL)isSelected
@@ -48,7 +49,7 @@
     
 //    [self addRect:context size:rect.size];
     
-//    [self setLinearGradient:context rect:rect];
+    [self setLinearGradient:context rect:rect];
     
     [self addCirle:context size:rect.size];
     
@@ -62,7 +63,7 @@
 
 - (void)setLinearGradient:(CGContextRef)context rect:(CGRect)rect
 {
-    UIColor *startColor = [UIColor colorWithRed:221/255 green:221/255 blue:221/255 alpha:1.0f];
+    UIColor *startColor = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
     CGFloat *startColorComponent = (CGFloat *)CGColorGetComponents(startColor.CGColor);
     
     UIColor *endColor = UIColor.grayColor;
@@ -114,6 +115,10 @@
     if (!self.isWorkday)
     {
         [[UIColor colorWithRed:125/255 green:125/255 blue:125/255 alpha:0.1f] set];
+    }
+    if (!self.isCurrentMonthDay)
+    {
+        [[UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:245.0f/255.0f alpha:1.0f] set];
     }
     if (self.isSelected)
     {

@@ -19,5 +19,6 @@
 @property (nonatomic) BOOL isSelected;
 @property (nonatomic) BOOL isCurrentDay;
 @property (nonatomic) BOOL isWorkday;
+@property (nonatomic) BOOL isCurrentMonthDay;//是否是当前月的日期
 
 @end

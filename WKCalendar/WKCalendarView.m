@@ -90,15 +90,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    
-//    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
-//    [self.layer renderInContext:context];
-//    UIImage *startImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIImageView *startView = [[UIImageView alloc] initWithImage:startImage];
-//    UIGraphicsEndImageContext();
     
     NSInteger totalWidth = CGRectGetWidth(self.frame);
     
@@ -115,17 +107,6 @@
     [self addWeekdays:context offset:colOffset];
     
     [self addDayPanel:context offset:colOffset rect:rect];
-    
-//    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
-//    [self.layer renderInContext:context];
-//    UIImage *endImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIImageView *endView = [[UIImageView alloc] initWithImage:endImage];
-//    UIGraphicsEndImageContext();
-    
-//    if (self.isShowAnimation)
-//    {
-//        [self swapTwoMonthView:startView endView:endView];
-//    }
 }
 
 //添加阴影
@@ -323,7 +304,9 @@
         --self.year;
     }
     self.isShowAnimation = YES;
+    UIView *beforeView = [self snapshotViewAfterScreenUpdates:NO];
     [self setNeedsDisplay];
+    [self beginAnimationForSwapMonth:beforeView isLeft:YES];
 }
 
 - (void)nextMonth:(UIButton *)button
@@ -335,7 +318,22 @@
         ++self.year;
     }
     self.isShowAnimation = YES;
+    UIView *beforeView = [self snapshotViewAfterScreenUpdates:NO];
     [self setNeedsDisplay];
+    
+    [self beginAnimationForSwapMonth:beforeView isLeft:NO];
+}
+
+- (void)beginAnimationForSwapMonth:(UIView *)oldMonthView isLeft:(BOOL)isLeft
+{
+    oldMonthView.backgroundColor = UIColor.whiteColor;
+    oldMonthView.layer.zPosition = 1024;
+    [self addSubview:oldMonthView];
+    [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        oldMonthView.frame = CGRectOffset(oldMonthView.frame, (isLeft ? -1 : 1) * oldMonthView.frame.size.width, 0);
+    } completion:^(BOOL finished) {
+        [oldMonthView removeFromSuperview];
+    }];
 }
 
 //添加年月信息
@@ -386,6 +384,7 @@
 - (void)addDayPanel:(CGContextRef)context offset:(NSInteger)colOffset rect:(CGRect)rect
 {
     NSInteger dayOfMonth = [self getTotalDayInMonth:self.month year:self.year];
+    NSInteger preDayOfMonth = [self getTotalDayInMonth:self.month - 1 year:self.year];
     NSInteger firstWeekday = [self getWeekdayInDay:1 month:self.month year:self.year] - 1;
     for (UIView *view in self.subviews)
     {
@@ -393,13 +392,22 @@
            [ view removeFromSuperview];
     }
     
-    CGContextSaveGState(context);
-    [UIColor.lightGrayColor setStroke];
-    for (int i = 0; i < self.rowTotal; ++i) {
+    
+
+    NSDateComponents *beginCompare = [[NSDateComponents alloc] init];
+    NSDateComponents *endCompare = [[NSDateComponents alloc] init];
+    
+    NSDate *beginDate = [self dateFormYear:self.beginYear month:self.beginMonth day:self.beginDay];
+    NSDate *endDate = [self dateFormYear:self.endYear month:self.endMonth day:self.endDay];
+
+    for (int i = 0; i < self.rowTotal; ++i)
+    {
         NSInteger y = (self.cellHeight + self.rowPadding ) * i + self.headerTotalHeight;
-        for (int j = 0; j < self.colTotal; ++j) {
-            NSInteger day = j + 1 + i * self.colTotal - firstWeekday;
-            if (day <= 0) continue;//确定1号开始的位置
+        for (int j = 0; j < self.colTotal; ++j)
+        {
+            NSInteger checkDay = j + 1 + i * self.colTotal - firstWeekday;
+            NSInteger day = 0, month = self.month, year = self.year;
+            UITapGestureRecognizer *tapGesture;
             NSInteger x = (self.cellWidth + self.colPadding ) * j + colOffset;
             WKCalendarViewCell *cell = [[WKCalendarViewCell alloc] initWithFrame:(CGRect){
                 x,
@@ -407,33 +415,59 @@
                 self.cellWidth,
                 self.cellHeight
             }];
+            if (checkDay <= 0)
+            {
+//                continue;//确定1号开始的位置
+                day = preDayOfMonth + checkDay;
+                --month;
+                tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(preMonthCellDidTouchedUpInside:)];
+                cell.isCurrentMonthDay = NO;
+            }
+            else if (--dayOfMonth < 0)
+            {
+//                break;//最后一天
+                day = abs(dayOfMonth);
+                ++month;
+                tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nextMonthCellDidTouchedUpInside:)];
+                cell.isCurrentMonthDay = NO;
+            }
+            else
+            {
+                day = checkDay;
+                tapGesture  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellDidTouchedUpInside:)];
+                cell.isCurrentMonthDay = YES;
+            }
+            NSDate *date = [self dateFormYear:year month:month day:day];
+            
             cell.tag = 1000;
             cell.day = day;
             cell.isWorkday = !(j == 0 || j == 6);
             cell.isCurrentDay = day == self.currentDay && self.year == self.currentYear && self.month == self.currentMonth;
             if (self.resultType == WKCalendarViewTypeDouble)
             {
-                cell.isSelected = ((day >= self.beginDay && day <= self.endDay) &&
-                                  (self.year >= self.beginYear && self.year <= self.endYear) &&
-                                  (self.month >= self.beginMonth && self.month <= self.endMonth)) || (day == self.beginDay && self.month == self.beginMonth && self.year == self.beginYear);
+                beginCompare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:beginDate options:NSCalendarWrapComponents];
+                endCompare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:endDate options:NSCalendarWrapComponents];
+                cell.isSelected = (beginCompare.day < 0 && endCompare.day > 0) || beginCompare.day == 0 || endCompare.day == 0;
             }
             else
             {
                 cell.isSelected = day == self.day;
             }
-            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellDidTouchedUpInside:)];
+            
             [cell addGestureRecognizer:tapGesture];
             [self addSubview:cell];
-            if (--dayOfMonth <= 0) break;//本月最后一天的位置
         }
         if (i == 0)
         {
+            CGContextSaveGState(context);
+            [UIColor.lightGrayColor setStroke];
             CGContextMoveToPoint(context, colOffset, y - self.rowPadding);
             CGContextAddLineToPoint(context, rect.size.width - colOffset, y - self.rowPadding);
+            CGContextStrokePath(context);
+            CGContextRestoreGState(context);
         }
     }
-    CGContextStrokePath(context);
-    CGContextRestoreGState(context);
+    
 }
 
 //获取指定年月的天数
@@ -467,18 +501,33 @@
 {
     WKCalendarViewCell *cell = (WKCalendarViewCell *)tapGuesture.view;
     NSInteger day = cell.day;
-    
     switch (self.resultType)
     {
         case WKCalendarViewTypeSimple:
             [self dealWithSimpleWithDay:day];
             break;
         case WKCalendarViewTypeDouble:
-            [self dealWithRangeWithDay:day];
+            [self dealWithRangeWithDay:day month:self.month year:self.year];
             break;
     }
     
     [self setNeedsDisplay];
+}
+
+//上一个月的天数
+- (void)preMonthCellDidTouchedUpInside:(UITapGestureRecognizer *)tapGuesture
+{
+    [self preMonth:nil];
+    
+    [self cellDidTouchedUpInside:tapGuesture];
+}
+
+//下一个月的天数
+- (void)nextMonthCellDidTouchedUpInside:(UITapGestureRecognizer *)tapGuesture
+{
+    [self nextMonth:nil];
+    
+    [self cellDidTouchedUpInside:tapGuesture];
 }
 
 - (void)dealWithSimpleWithDay:(NSInteger)day
@@ -486,32 +535,53 @@
     self.day = day;
 }
 
-- (void)dealWithRangeWithDay:(NSInteger)day
+- (void)dealWithRangeWithDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
 {
     if (self.beginDay == 0)
     {
         self.beginDay = day;
-        self.beginMonth = self.month;
-        self.beginYear = self.year;
+        self.beginMonth = month;
+        self.beginYear = year;
     }
     else
     {
-        if (self.beginDay == day && self.month == self.beginMonth && self.year == self.beginYear)
+        if (self.beginDay == day && month == self.beginMonth && year == self.beginYear)
         {
             self.beginDay = self.endDay;
             self.beginMonth = self.endMonth;
             self.beginYear = self.endYear;
             self.endDay = self.endMonth = self.endYear = 0;
         }
-        else if (self.endDay == day && self.month == self.endMonth && self.year == self.endYear)
+        else if (self.endDay == day && month == self.endMonth && year == self.endYear)
         {
             self.endDay = self.endMonth = self.endYear = 0;
         }
         else
         {
-            self.endDay = day;
-            self.endMonth = self.month;
-            self.endYear = self.year;
+            if (self.endDay > 0)
+            {
+                NSDate *date = [self dateFormYear:year month:month day:day];
+                NSDate *beginDate = [self dateFormYear:self.beginYear month:self.beginMonth day:self.beginDay];
+                NSDateComponents *compare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:beginDate options:NSCalendarWrapComponents];
+                if (compare.day > 0)
+                {
+                    self.beginDay = day;
+                    self.beginMonth = month;
+                    self.beginYear = year;
+                }
+                else
+                {
+                    self.endDay = day;
+                    self.endMonth = month;
+                    self.endYear = year;
+                }
+            }
+            else
+            {
+                self.endDay = day;
+                self.endMonth = month;
+                self.endYear = year;
+            }
         }
     }
     
@@ -523,44 +593,41 @@
 {
     if (self.beginDay == 0 && self.beginMonth == 0 && self.endYear == 0) return;
     if (self.endDay == 0 && self.endMonth == 0 && self.endYear == 0) return;
-    if (self.beginYear > self.endYear)
+    NSDateComponents *beginComp = [[NSDateComponents alloc] init];
+    NSDateComponents *endComp = [[NSDateComponents alloc] init];
+    beginComp.day = self.beginDay;
+    beginComp.month = self.beginMonth;
+    beginComp.year = self.beginYear;
+    endComp.day = self.endDay;
+    endComp.month = self.endMonth;
+    endComp.year = self.endYear;
+    NSDate *beginDate = [[NSCalendar currentCalendar] dateFromComponents:beginComp];
+    NSDate *endDate = [[NSCalendar currentCalendar] dateFromComponents:endComp];
+    NSDateComponents *compareComp = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:beginDate toDate:endDate options:NSCalendarWrapComponents];
+    if (compareComp.day < 0)
     {
         self.beginYear = self.beginYear + self.endYear;
         self.endYear = self.beginYear - self.endYear;
         self.beginYear = self.beginYear - self.endYear;
-    }
-    if (self.beginMonth > self.endMonth)
-    {
+        
         self.beginMonth = self.beginMonth + self.endMonth;
         self.endMonth = self.beginMonth - self.endMonth;
         self.beginMonth = self.beginMonth - self.endMonth;
-    }
-    if (self.beginDay > self.endDay)
-    {
+        
         self.beginDay = self.beginDay + self.endDay;
         self.endDay = self.beginDay - self.endDay;
         self.beginDay = self.beginDay - self.endDay;
     }
 }
 
-- (void)swapTwoMonthView:(UIView *)startView endView:(UIView *)endView
+- (NSDate *)dateFormYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day
 {
-    if (!self.isShowAnimation) return;
-    [self addSubview:startView];
-    [self addSubview:endView];
-    CGRect srcFrame = startView.frame;
-    CGRect dstFrame = endView.frame;
-    endView.frame = CGRectOffset(dstFrame, dstFrame.size.width, 0);
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.day = day;
+    dateComponents.month = month;
+    dateComponents.year = year;
     
-    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.0 initialSpringVelocity:0.8 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        startView.frame = CGRectOffset(srcFrame, -srcFrame.size.width, 0);
-        endView.frame = dstFrame;
-    } completion:^(BOOL finished) {
-        [startView removeFromSuperview];
-        [endView removeFromSuperview];
-    }];
-    
-    self.isShowAnimation = NO;
+    return [[NSCalendar currentCalendar] dateFromComponents:dateComponents];
 }
 
 @end
