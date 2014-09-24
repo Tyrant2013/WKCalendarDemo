@@ -24,17 +24,18 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
+    NSInteger offset = rect.size.width / 5;
     
     CGMutablePathRef path = CGPathCreateMutable();
     
-    CGPathMoveToPoint(path, NULL, 0, rect.size.height / 2);
+    CGPathMoveToPoint(path, NULL, rect.size.width / 3 - offset, rect.size.height / 2);
     CGPathAddLineToPoint(path, NULL, rect.size.width / 3 * 2, 0);
     CGPathAddLineToPoint(path, NULL, rect.size.width / 3 * 2, rect.size.height / 3);
-    CGPathAddLineToPoint(path, NULL, rect.size.width, rect.size.height / 3);
-    CGPathAddLineToPoint(path, NULL, rect.size.width, rect.size.height / 3 * 2);
+    CGPathAddLineToPoint(path, NULL, rect.size.width - offset, rect.size.height / 3);
+    CGPathAddLineToPoint(path, NULL, rect.size.width - offset, rect.size.height / 3 * 2);
     CGPathAddLineToPoint(path, NULL, rect.size.width / 3 * 2, rect.size.height / 3 * 2);
     CGPathAddLineToPoint(path, NULL, rect.size.width / 3 * 2, rect.size.height);
-    CGPathAddLineToPoint(path, NULL, 0, rect.size.height / 2);
+    CGPathAddLineToPoint(path, NULL, rect.size.width / 3 - offset, rect.size.height / 2);
     
     CGContextAddPath(context, path);
     

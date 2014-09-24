@@ -26,6 +26,10 @@ typedef NS_ENUM(NSInteger, WKCalendarViewType)
 @property (nonatomic) NSInteger beginMonth;
 @property (nonatomic) NSInteger beginDay;
 
+@property (nonatomic) NSInteger day;
+@property (nonatomic) NSInteger month;
+@property (nonatomic) NSInteger year;
+
 @property (nonatomic) NSInteger endYear;
 @property (nonatomic) NSInteger endMonth;
 @property (nonatomic) NSInteger endDay;

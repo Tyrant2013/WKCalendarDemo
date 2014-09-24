@@ -36,10 +36,6 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 @property (nonatomic) NSInteger currentMonth;
 @property (nonatomic) NSInteger currentYear;
 
-@property (nonatomic) NSInteger day;
-@property (nonatomic) NSInteger month;
-@property (nonatomic) NSInteger year;
-
 @end
 
 @implementation WKCalendarView
