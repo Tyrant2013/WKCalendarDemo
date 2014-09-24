@@ -548,7 +548,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
             }
             else
             {
-                cell.isSelected = day == self.day;
+                cell.isSelected = day == self.day && (dayOfMonth >= 0) && (checkDay > 0);
             }
             
             [cell addGestureRecognizer:tapGesture];
