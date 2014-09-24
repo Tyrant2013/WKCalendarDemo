@@ -430,7 +430,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         yearButton.frame = (CGRect){x, y, width, height};
         yearButton.tag = 1101;
         yearButton.titleLabel.textAlignment = NSTextAlignmentRight;
-        [yearButton addTarget:self action:@selector(showYearViewForSelected) forControlEvents:UIControlEventTouchUpInside];
+//        [yearButton addTarget:self action:@selector(showYearViewForSelected) forControlEvents:UIControlEventTouchUpInside];
+        [yearButton addTarget:self action:@selector(showYearViewFromButton:) forControlEvents:UIControlEventTouchUpInside];
         yearButton.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
         yearButton.layer.borderWidth = 1.0f;
         [self addSubview:yearButton];
@@ -444,7 +445,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         monthButton.frame = (CGRect){x, y, width, height};
         monthButton.tag = 1102;
         monthButton.titleLabel.textAlignment = NSTextAlignmentLeft;
-        [monthButton addTarget:self action:@selector(showMonthViewForSelected) forControlEvents:UIControlEventTouchUpInside];
+//        [monthButton addTarget:self action:@selector(showMonthViewForSelected) forControlEvents:UIControlEventTouchUpInside];
+        [monthButton addTarget:self action:@selector(showMonthViewFromButton:) forControlEvents:UIControlEventTouchUpInside];
         monthButton.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
         monthButton.layer.borderWidth = 1.0f;
         [self addSubview:monthButton];
@@ -756,7 +758,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     }
     else
     {
-        WKYearView *yearView = [[WKYearView alloc] initWithFrame:(CGRect){0, self.headerTotalHeight - 20, self.frame.size.width, self.frame.size.height - self.headerTotalHeight + 20} year:self.year];
+        WKYearView *yearView = [[WKYearView alloc] initWithFrame:(CGRect){0, 0, self.frame.size.width, self.frame.size.height} year:self.year];
         yearView.tag = 555;
         yearView.layer.zPosition = 1110;
         yearView.didSelectedWithYear = ^(NSInteger year){
@@ -766,6 +768,66 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         };
         [yearView showInView:self];
     }
+}
+
+- (void)showMonthViewFromButton:(UIButton *)button
+{
+    CGRect frame = button.frame;
+    CGFloat position = button.layer.zPosition;
+    
+    WKMonthView *monthView = [[WKMonthView alloc] initWithFrame:(CGRect){0, 0, self.frame.size.width, self.frame.size.height}];
+    monthView.tag = 666;
+    monthView.layer.zPosition = 1110;
+    monthView.selectedMonth = self.month;
+    monthView.didSelectedMonth = ^(NSInteger month){
+        if (month == self.month) return;
+        self.month = month;
+        [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionUp];
+    };
+    CGRect dstFrame = (CGRect){0, 0, self.frame.size.width, 60};
+    CGRect monthFrame = monthView.frame;
+    monthView.frame = dstFrame;
+    button.layer.zPosition = 1000;
+    button.backgroundColor = UIColor.whiteColor;
+    [UIView animateWithDuration:0.3f animations:^{
+        button.frame = dstFrame;
+    } completion:^(BOOL finished) {
+        button.frame = frame;
+        button.layer.zPosition = position;
+        [self addSubview:monthView];
+        [UIView animateWithDuration:0.3f animations:^{
+            monthView.frame = monthFrame;
+        }];
+    }];
+}
+
+- (void)showYearViewFromButton:(UIButton *)button
+{
+    CGRect frame = button.frame;
+    CGFloat position = button.layer.zPosition;
+    WKYearView *yearView = [[WKYearView alloc] initWithFrame:(CGRect){0, 0, self.frame.size.width, self.frame.size.height} year:self.year];
+    yearView.tag = 555;
+    yearView.layer.zPosition = 1110;
+    yearView.didSelectedWithYear = ^(NSInteger year){
+        if (year == self.year) return;
+        self.year = year;
+        [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionDown];
+    };
+    CGRect dstFrame = (CGRect){0, 0, self.frame.size.width, 60};
+    CGRect yearFrame = yearView.frame;
+    yearView.frame = dstFrame;
+    button.layer.zPosition = 1000;
+    button.backgroundColor = UIColor.whiteColor;
+    [UIView animateWithDuration:0.3f animations:^{
+        button.frame = dstFrame;
+    } completion:^(BOOL finished) {
+        button.frame = frame;
+        button.layer.zPosition = position;
+        [self addSubview:yearView];
+        [UIView animateWithDuration:0.3f animations:^{
+            yearView.frame = yearFrame;
+        }];
+    }];
 }
 
 @end
