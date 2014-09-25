@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "WKCalendarView.h"
+#import "WKDateTimeView.h"
 
 @interface ViewController ()
 
@@ -19,6 +20,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    WKDateTimeView *dateTime = [[WKDateTimeView alloc] initWithFrame:(CGRect){10, 100, 0, 0}];
+    [self.view addSubview:dateTime];
+    return;
     self.view.backgroundColor = UIColor.whiteColor;
     WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){10,100,0,0}];
 //    calendar.resultType = WKCalendarViewTypeSimple;

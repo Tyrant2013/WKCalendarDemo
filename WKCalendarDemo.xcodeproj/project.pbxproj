@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB40E4DB19D3E265006BB2FF /* WKDateTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40E4DA19D3E265006BB2FF /* WKDateTimeView.m */; };
+		EB40E4E419D3E34E006BB2FF /* WKDateTimeViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40E4E319D3E34E006BB2FF /* WKDateTimeViewCell.m */; };
+		EB40E4E719D3E3E9006BB2FF /* WKDateTimeHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40E4E619D3E3E9006BB2FF /* WKDateTimeHeaderView.m */; };
+		EB40E4EA19D3F185006BB2FF /* WKHourView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40E4E919D3F185006BB2FF /* WKHourView.m */; };
 		EB50AC4019D0192B004EE10B /* ArrowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EB50AC3F19D0192B004EE10B /* ArrowButton.m */; };
 		EB5B39B519D15E1400421C65 /* WKMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB5B39B419D15E1400421C65 /* WKMonthView.m */; };
 		EB5B39B819D1762000421C65 /* WKYearView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB5B39B719D1762000421C65 /* WKYearView.m */; };
+		EB61691E19D3FE6300FC6356 /* WKMinuteView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB61691D19D3FE6300FC6356 /* WKMinuteView.m */; };
+		EB61692119D41D1700FC6356 /* WKHourMinuteView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB61692019D41D1700FC6356 /* WKHourMinuteView.m */; };
 		EB68C55119BEA8A80017E28F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55019BEA8A80017E28F /* Foundation.framework */; };
 		EB68C55319BEA8A80017E28F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55219BEA8A80017E28F /* CoreGraphics.framework */; };
 		EB68C55519BEA8A80017E28F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55419BEA8A80017E28F /* UIKit.framework */; };
@@ -40,12 +46,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB40E4D919D3E265006BB2FF /* WKDateTimeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKDateTimeView.h; path = WKCalendar/DateTime/WKDateTimeView.h; sourceTree = "<group>"; };
+		EB40E4DA19D3E265006BB2FF /* WKDateTimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKDateTimeView.m; path = WKCalendar/DateTime/WKDateTimeView.m; sourceTree = "<group>"; };
+		EB40E4E219D3E34E006BB2FF /* WKDateTimeViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKDateTimeViewCell.h; path = WKCalendar/DateTime/WKDateTimeViewCell.h; sourceTree = "<group>"; };
+		EB40E4E319D3E34E006BB2FF /* WKDateTimeViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKDateTimeViewCell.m; path = WKCalendar/DateTime/WKDateTimeViewCell.m; sourceTree = "<group>"; };
+		EB40E4E519D3E3E9006BB2FF /* WKDateTimeHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKDateTimeHeaderView.h; path = WKCalendar/DateTime/WKDateTimeHeaderView.h; sourceTree = "<group>"; };
+		EB40E4E619D3E3E9006BB2FF /* WKDateTimeHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKDateTimeHeaderView.m; path = WKCalendar/DateTime/WKDateTimeHeaderView.m; sourceTree = "<group>"; };
+		EB40E4E819D3F185006BB2FF /* WKHourView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKHourView.h; path = WKCalendar/DateTime/WKHourView.h; sourceTree = "<group>"; };
+		EB40E4E919D3F185006BB2FF /* WKHourView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKHourView.m; path = WKCalendar/DateTime/WKHourView.m; sourceTree = "<group>"; };
 		EB50AC3E19D0192B004EE10B /* ArrowButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArrowButton.h; path = WKCalendar/ArrowButton.h; sourceTree = "<group>"; };
 		EB50AC3F19D0192B004EE10B /* ArrowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ArrowButton.m; path = WKCalendar/ArrowButton.m; sourceTree = "<group>"; };
 		EB5B39B319D15E1400421C65 /* WKMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKMonthView.h; path = WKCalendar/WKMonthView.h; sourceTree = "<group>"; };
 		EB5B39B419D15E1400421C65 /* WKMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKMonthView.m; path = WKCalendar/WKMonthView.m; sourceTree = "<group>"; };
 		EB5B39B619D1762000421C65 /* WKYearView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKYearView.h; path = WKCalendar/WKYearView.h; sourceTree = "<group>"; };
 		EB5B39B719D1762000421C65 /* WKYearView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKYearView.m; path = WKCalendar/WKYearView.m; sourceTree = "<group>"; };
+		EB61691C19D3FE6300FC6356 /* WKMinuteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKMinuteView.h; path = WKCalendar/DateTime/WKMinuteView.h; sourceTree = "<group>"; };
+		EB61691D19D3FE6300FC6356 /* WKMinuteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKMinuteView.m; path = WKCalendar/DateTime/WKMinuteView.m; sourceTree = "<group>"; };
+		EB61691F19D41D1700FC6356 /* WKHourMinuteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKHourMinuteView.h; path = WKCalendar/DateTime/WKHourMinuteView.h; sourceTree = "<group>"; };
+		EB61692019D41D1700FC6356 /* WKHourMinuteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKHourMinuteView.m; path = WKCalendar/DateTime/WKHourMinuteView.m; sourceTree = "<group>"; };
 		EB68C54D19BEA8A80017E28F /* WKCalendarDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WKCalendarDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB68C55019BEA8A80017E28F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EB68C55219BEA8A80017E28F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -97,6 +115,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EB40E4D819D3E234006BB2FF /* DateTime */ = {
+			isa = PBXGroup;
+			children = (
+				EB40E4D919D3E265006BB2FF /* WKDateTimeView.h */,
+				EB40E4DA19D3E265006BB2FF /* WKDateTimeView.m */,
+				EB40E4E219D3E34E006BB2FF /* WKDateTimeViewCell.h */,
+				EB40E4E319D3E34E006BB2FF /* WKDateTimeViewCell.m */,
+				EB40E4E519D3E3E9006BB2FF /* WKDateTimeHeaderView.h */,
+				EB40E4E619D3E3E9006BB2FF /* WKDateTimeHeaderView.m */,
+				EB40E4E819D3F185006BB2FF /* WKHourView.h */,
+				EB40E4E919D3F185006BB2FF /* WKHourView.m */,
+				EB61691C19D3FE6300FC6356 /* WKMinuteView.h */,
+				EB61691D19D3FE6300FC6356 /* WKMinuteView.m */,
+				EB61691F19D41D1700FC6356 /* WKHourMinuteView.h */,
+				EB61692019D41D1700FC6356 /* WKHourMinuteView.m */,
+			);
+			name = DateTime;
+			sourceTree = "<group>";
+		};
 		EB68C54419BEA8A80017E28F = {
 			isa = PBXGroup;
 			children = (
@@ -174,6 +211,7 @@
 		EB68C58519BEAA140017E28F /* WKCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				EB40E4D819D3E234006BB2FF /* DateTime */,
 				EB68C58619BEAA4C0017E28F /* WKCalendar.h */,
 				EB68C58719BEAA4C0017E28F /* WKCalendar.m */,
 				EB68C58919BEAA680017E28F /* WKCalendarView.h */,
@@ -287,12 +325,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB40E4E719D3E3E9006BB2FF /* WKDateTimeHeaderView.m in Sources */,
 				EB50AC4019D0192B004EE10B /* ArrowButton.m in Sources */,
+				EB40E4E419D3E34E006BB2FF /* WKDateTimeViewCell.m in Sources */,
 				EB68C56719BEA8A80017E28F /* ViewController.m in Sources */,
 				EB68C56119BEA8A80017E28F /* AppDelegate.m in Sources */,
+				EB40E4DB19D3E265006BB2FF /* WKDateTimeView.m in Sources */,
 				EB5B39B519D15E1400421C65 /* WKMonthView.m in Sources */,
+				EB61692119D41D1700FC6356 /* WKHourMinuteView.m in Sources */,
+				EB40E4EA19D3F185006BB2FF /* WKHourView.m in Sources */,
 				EB68C58B19BEAA680017E28F /* WKCalendarView.m in Sources */,
 				EB5B39B819D1762000421C65 /* WKYearView.m in Sources */,
+				EB61691E19D3FE6300FC6356 /* WKMinuteView.m in Sources */,
 				EB68C55D19BEA8A80017E28F /* main.m in Sources */,
 				EB68C58E19BEAEBA0017E28F /* WKCalendarViewCell.m in Sources */,
 				EB68C58819BEAA4C0017E28F /* WKCalendar.m in Sources */,
