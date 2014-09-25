@@ -103,7 +103,10 @@
 
 - (void)hourButtonClick:(UIButton *)button
 {
-    NSLog(@"touch hour is : %d", button.tag);
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didClickHourButton:hour:)])
+    {
+        [self.delegate didClickHourButton:button hour:button.titleLabel.text];
+    }
 }
 
 /*

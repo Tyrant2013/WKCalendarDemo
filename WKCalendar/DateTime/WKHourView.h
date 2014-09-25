@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol WKHourViewDelegate
+
+@optional
+- (void)didClickHourButton:(UIButton *)button hour:(NSString *)hour;
+
+@end
+
 @interface WKHourView : UIView
+
+@property (nonatomic, weak) id delegate;
 
 @end

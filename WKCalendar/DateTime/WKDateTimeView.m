@@ -13,6 +13,7 @@
 
 @interface WKDateTimeView()<
   WKDateTimeHeaderViewDelegate,
+  WKHourViewDelegate,
   WKMinuteViewDelegate
 >
 
@@ -73,6 +74,7 @@
         case 0:
         {
             WKHourView *hourView = [[WKHourView alloc] initWithFrame:frame];
+            hourView.delegate = self;
             view = hourView;
         }
             break;
@@ -86,6 +88,13 @@
     }
     view.tag = 110;
     [self addSubview:view];
+}
+
+#pragma mark - WKHourViewDelegate
+
+- (void)didClickHourButton:(UIButton *)button hour:(NSString *)hour
+{
+    self.header.hour = hour;
 }
 
 #pragma mark - WKMinuteViewDelegate
