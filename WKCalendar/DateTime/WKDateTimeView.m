@@ -67,6 +67,27 @@
     };
     [self addSubview:hourMinuteView];
     
+    UISwipeGestureRecognizer *leftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    leftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self addGestureRecognizer:leftGesture];
+    
+    UISwipeGestureRecognizer *upGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    upGesture.direction = UISwipeGestureRecognizerDirectionUp;
+    [self addGestureRecognizer:upGesture];
+    
+    UISwipeGestureRecognizer *rightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    rightGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self addGestureRecognizer:rightGesture];
+    
+    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
+    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    [self addGestureRecognizer:downGesture];
+    
+}
+
+- (void)swipeGesture:(UISwipeGestureRecognizer *)gesture
+{
+    
 }
 
 - (void)setTime:(NSString *)time
