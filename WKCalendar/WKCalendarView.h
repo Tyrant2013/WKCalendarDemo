@@ -12,7 +12,8 @@
 typedef NS_ENUM(NSInteger, WKCalendarViewType)
 {
     WKCalendarViewTypeSimple,
-    WKCalendarViewTypeDouble
+    WKCalendarViewTypeDouble,
+    WKCalendarViewTypeSimpleDateTime
 };
 
 @interface WKCalendarView : UIView
@@ -25,7 +26,9 @@ typedef NS_ENUM(NSInteger, WKCalendarViewType)
 @property (nonatomic) NSInteger beginYear;
 @property (nonatomic) NSInteger beginMonth;
 @property (nonatomic) NSInteger beginDay;
+@property (nonatomic) NSString *beginTime;
 
+@property (nonatomic) NSString *time;
 @property (nonatomic) NSInteger day;
 @property (nonatomic) NSInteger month;
 @property (nonatomic) NSInteger year;
@@ -33,6 +36,7 @@ typedef NS_ENUM(NSInteger, WKCalendarViewType)
 @property (nonatomic) NSInteger endYear;
 @property (nonatomic) NSInteger endMonth;
 @property (nonatomic) NSInteger endDay;
+@property (nonatomic) NSString *endTime;
 
 @end
 
@@ -41,5 +45,6 @@ typedef NS_ENUM(NSInteger, WKCalendarViewType)
 
 @optional
 - (void)calendarView:(WKCalendarView *)calendarView didSelectedStartDate:(NSString *)startDate endDate:(NSString *)endDate;
+- (void)calendarView:(WKCalendarView *)calendarView didSelectedChange:(NSString *)date;
 
 @end

@@ -21,12 +21,12 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    WKDateTimeView *dateTime = [[WKDateTimeView alloc] initWithFrame:(CGRect){10, 100, 0, 0}];
+    WKDateTimeView *dateTime = [[WKDateTimeView alloc] initWithFrame:(CGRect){10, 20, 0, 0}];
     [self.view addSubview:dateTime];
-    return;
+//    return;
     self.view.backgroundColor = UIColor.whiteColor;
-    WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){10,100,0,0}];
-//    calendar.resultType = WKCalendarViewTypeSimple;
+    WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){10,300,0,0}];
+    calendar.resultType = WKCalendarViewTypeSimpleDateTime;
     [self.view addSubview:calendar];
 //    calendar.backgroundColor = UIColor.whiteColor;
 }

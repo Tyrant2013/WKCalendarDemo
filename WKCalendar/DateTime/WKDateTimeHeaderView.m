@@ -34,10 +34,33 @@
     _minute = _minute == nil ? @"00" : _minute;
     _second = _second == nil ? @"00" : _second;
     
-    CGFloat width = self.frame.size.width / 3;
+    CGFloat btnWidth = 50.0f;
+    CGFloat btnHeight = self.frame.size.height;
+    CGFloat width = (self.frame.size.width - btnWidth * 2) / 3;
     CGFloat height = self.frame.size.height - 10;
     CGFloat x = (self.frame.size.width - width * 2 - 7) / 2;
     CGFloat y = (self.frame.size.height - height) / 2;
+    UIColor *borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
+    
+    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    cancelButton.frame = (CGRect){0, 0, btnWidth, btnHeight};
+    cancelButton.layer.borderColor = borderColor.CGColor;
+    cancelButton.layer.borderWidth = 1.0f;
+    cancelButton.tag = 0;
+    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [cancelButton addTarget:self action:@selector(functionButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:cancelButton];
+    
+    UIButton *confirmButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [confirmButton setTitle:@"确定" forState:UIControlStateNormal];
+    [confirmButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    confirmButton.layer.borderColor = borderColor.CGColor;
+    confirmButton.layer.borderWidth = 1.0f;
+    confirmButton.frame = (CGRect){self.frame.size.width - btnWidth, 0, btnWidth, btnHeight};
+    confirmButton.tag = 1;
+    [confirmButton addTarget:self action:@selector(functionButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:confirmButton];
     
     _btnHour = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     _btnMinute = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -88,6 +111,16 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(didButtonClick:)])
     {
         [self.delegate didButtonClick:button];
+    }
+}
+
+- (void)functionButtonClick:(UIButton *)button
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didFunctionButtonClick:withTime:)])
+    {
+        NSString *time = [NSString stringWithFormat:@"%@:%@", self.btnHour.titleLabel.text, self.btnMinute.titleLabel.text];
+        if (button.tag == 0) time = nil;
+        [self.delegate didFunctionButtonClick:button withTime:time];
     }
 }
 

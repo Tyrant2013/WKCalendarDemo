@@ -11,6 +11,7 @@
 #import "ArrowButton.h"
 #import "WKMonthView.h"
 #import "WKYearView.h"
+#import "DateTime/WKDateTimeView.h"
 
 typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 {
@@ -63,15 +64,15 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     _resultType = WKCalendarViewTypeDouble;
     _isShowAnimation = NO;
     _calendar = [[WKCalendar alloc] init];
-    self.colTotal = 7;
-    self.rowTotal = 5;
-    self.colPadding = 2;
-    self.rowPadding = 2;
-    self.headerTotalHeight = 100;
-    self.heaerResultHeight = 40;
+    _colTotal = 7;
+    _rowTotal = 5;
+    _colPadding = 2;
+    _rowPadding = 2;
+    _headerTotalHeight = 100;
+    _heaerResultHeight = 40;
     
-    self.cellWidth = (self.frame.size.width - (self.colPadding * self.colTotal)) / self.colTotal;
-    self.cellHeight = (self.frame.size.height - self.headerTotalHeight - (self.rowPadding * self.rowTotal)) / self.rowTotal;
+    _cellWidth = (self.frame.size.width - (self.colPadding * self.colTotal)) / self.colTotal;
+    _cellHeight = (self.frame.size.height - self.headerTotalHeight - (self.rowPadding * self.rowTotal)) / self.rowTotal;
     
     self.weekDaysChinese = @{@"Sunday":@"日",
                              @"Monday":@"一",
@@ -81,15 +82,16 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
                              @"Friday":@"五",
                              @"Saturday":@"六"};
     
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitYear|NSCalendarUnitHour|NSCalendarUnitMinute
                                                                    fromDate:[NSDate date]];
-    self.day = components.day;
-    self.month = components.month;
-    self.year = components.year;
+    _time = [self changeToTimeValueFormHour:components.hour minute:components.minute];
+    _day = components.day;
+    _month = components.month;
+    _year = components.year;
     
-    self.currentDay = components.day;
-    self.currentMonth = components.month;
-    self.currentYear = components.year;
+    _currentDay = components.day;
+    _currentMonth = components.month;
+    _currentYear = components.year;
     
     UISwipeGestureRecognizer *swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
     swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
@@ -106,6 +108,15 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     UISwipeGestureRecognizer *swipeDownGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
     swipeDownGesture.direction = UISwipeGestureRecognizerDirectionDown;
     [self addGestureRecognizer:swipeDownGesture];
+}
+
+- (NSString *)changeToTimeValueFormHour:(NSInteger)hour minute:(NSInteger)minute
+{
+    NSString *time;
+    NSString *hourStr = [NSString stringWithFormat:hour >= 10 ? @"%d" : @"0%d", hour];
+    NSString *minStr = [NSString stringWithFormat:minute >= 10 ? @"%d" : @"0%d", minute];
+    time = [NSString stringWithFormat:@"%@:%@", hourStr, minStr];
+    return time;
 }
 
 - (void)swipeGesture:(UISwipeGestureRecognizer *)gesture
@@ -136,6 +147,21 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     
     NSInteger colOffset = (totalWidth - (self.colTotal * (self.cellWidth + self.colPadding) - self.colPadding)) / 2;
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectedChange:)])
+    {
+        NSString *date = [self changeToStringFromYear:self.year month:self.month day:self.day];
+        NSString *result;
+        if (self.resultType == WKCalendarViewTypeSimpleDateTime)
+        {
+            result = [NSString stringWithFormat:@"%@ %@", date, self.time];
+        }
+        else
+        {
+            result = date;
+        }
+        [self.delegate calendarView:self didSelectedChange:result];
+    }
+    
     [self addShadow];
     
     [self addButton];
@@ -165,6 +191,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 //添加两边的按钮
 - (void)addButton
 {
+    if (self.resultType != WKCalendarViewTypeDouble) return;
     CGFloat x = 0;
     CGFloat y = 0;
     CGFloat buttonWidth = 50;
@@ -206,6 +233,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     switch (self.resultType)
     {
         case WKCalendarViewTypeSimple:
+        case WKCalendarViewTypeSimpleDateTime:
             [self addSimpleResult];
             break;
         case WKCalendarViewTypeDouble:
@@ -222,9 +250,14 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     CGFloat y = 0;
     
     NSString *date = @"日期:";
-    NSString *dateValue = [NSString stringWithFormat:@"%d-%d-%d", self.year, self.month, self.day];
+
+    NSString *dateValue = [self changeToStringFromYear:self.year month:self.month day:self.day];
+    if (self.resultType == WKCalendarViewTypeSimpleDateTime)
+    {
+        dateValue = [NSString stringWithFormat:@"%@  %@", dateValue, self.time];
+    }
     NSString *all = [NSString stringWithFormat:@"%@%@", date, dateValue];
-    
+
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentLeft;
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
@@ -252,8 +285,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     
     NSString *begin = @"开始:";
     NSString *end = @"结束:";
-    NSString *beginDate = [NSString stringWithFormat:@"%d-%d-%d", self.beginYear, self.beginMonth, self.beginDay];
-    NSString *endDate = [NSString stringWithFormat:@"%d-%d-%d", self.endYear, self.endMonth, self.endDay];
+    NSString *beginDate = [self changeToStringFromYear:self.beginYear month:self.beginMonth day:self.beginDay];
+    NSString *endDate = [self changeToStringFromYear:self.endYear month:self.endMonth day:self.endDay];
     NSString *all = [NSString stringWithFormat:@"%@%@%@%@", begin,beginDate,end,endDate];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -285,9 +318,21 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     [endDate drawInRect:frame withAttributes:dic];
 }
 
+- (NSString *)changeToStringFromYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day
+{
+    NSString *date;
+    NSString *monValue = [NSString stringWithFormat:month >= 10 ? @"%d": @"0%d", month];
+    NSString *dayValue = [NSString stringWithFormat:day >= 10 ? @"%d": @"0%d", day];
+    date = [NSString stringWithFormat:@"%d-%@-%@", year, monValue, dayValue];
+    return date;
+}
+
 - (void)cancelButtonTouchUpInside:(UIButton *)button
 {
-    [self removeFromSuperview];
+    if ([self.delegate respondsToSelector:@selector(calendarView:didSelectedStartDate:endDate:)])
+    {
+        [self.delegate calendarView:self didSelectedStartDate:nil endDate:nil];
+    }
 }
 
 - (void)confirmButtonTouchUpInside:(UIButton *)button
@@ -305,10 +350,12 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
                 startDate = [NSString stringWithFormat:@"%d-%d-%d", self.beginYear, self.beginMonth, self.beginDay];
                 endDate = [NSString stringWithFormat:@"%d-%d-%d", self.endYear, self.endMonth, self.endDay];
                 break;
+            case WKCalendarViewTypeSimpleDateTime:
+                startDate = endDate = [NSString stringWithFormat:@"%d-%d-%d %@", self.year, self.month, self.day, self.time];
+                break;
         }
         [self.delegate calendarView:self didSelectedStartDate:startDate endDate:endDate];
     }
-    [self removeFromSuperview];
 }
 
 - (void)addArrowButton
@@ -418,6 +465,11 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     CGFloat x = 45;
     CGFloat y = self.heaerResultHeight + 5;
     CGFloat width = (self.frame.size.width - 88) / 2 - 1;
+    CGColorRef borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+    if (self.resultType == WKCalendarViewTypeSimpleDateTime)
+    {
+        width = (self.frame.size.width - 88) / 3 - 1;
+    }
     CGFloat height = 20;
     UIButton *yearButton = (UIButton *)[self viewWithTag:1101];
     if (!yearButton)
@@ -425,10 +477,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         yearButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         yearButton.frame = (CGRect){x, y, width, height};
         yearButton.tag = 1101;
-        yearButton.titleLabel.textAlignment = NSTextAlignmentRight;
-//        [yearButton addTarget:self action:@selector(showYearViewForSelected) forControlEvents:UIControlEventTouchUpInside];
         [yearButton addTarget:self action:@selector(showYearViewFromButton:) forControlEvents:UIControlEventTouchUpInside];
-        yearButton.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+        yearButton.layer.borderColor = borderColor;
         yearButton.layer.borderWidth = 1.0f;
         [self addSubview:yearButton];
     }
@@ -440,12 +490,27 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         monthButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         monthButton.frame = (CGRect){x, y, width, height};
         monthButton.tag = 1102;
-        monthButton.titleLabel.textAlignment = NSTextAlignmentLeft;
-//        [monthButton addTarget:self action:@selector(showMonthViewForSelected) forControlEvents:UIControlEventTouchUpInside];
         [monthButton addTarget:self action:@selector(showMonthViewFromButton:) forControlEvents:UIControlEventTouchUpInside];
-        monthButton.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+        monthButton.layer.borderColor = borderColor;
         monthButton.layer.borderWidth = 1.0f;
         [self addSubview:monthButton];
+    }
+    
+    if (self.resultType == WKCalendarViewTypeSimpleDateTime)
+    {
+        x += width;
+        UIButton *timeButton = (UIButton *)[self viewWithTag:1103];
+        if (!timeButton)
+        {
+            timeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            timeButton.frame = (CGRect){x, y, width, height};
+            timeButton.tag = 1103;
+            timeButton.layer.borderWidth = 1.0f;
+            timeButton.layer.borderColor = borderColor;
+            [timeButton addTarget:self action:@selector(showTimeViewFrombutton:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:timeButton];
+        }
+        [timeButton setTitle:[NSString stringWithFormat:@"%@", self.time] forState:UIControlStateNormal];
     }
     
     [yearButton setTitle:[NSString stringWithFormat:@"%d 年",self.year] forState:UIControlStateNormal];
@@ -597,6 +662,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     switch (self.resultType)
     {
         case WKCalendarViewTypeSimple:
+            case WKCalendarViewTypeSimpleDateTime:
             [self dealWithSimpleWithDay:day];
             break;
         case WKCalendarViewTypeDouble:
@@ -766,6 +832,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     }
 }
 
+#pragma mark - 两个箭头中间的按钮
+
 - (void)showMonthViewFromButton:(UIButton *)button
 {
     CGRect frame = button.frame;
@@ -822,6 +890,37 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         [self addSubview:yearView];
         [UIView animateWithDuration:0.3f animations:^{
             yearView.frame = yearFrame;
+        }];
+    }];
+}
+
+- (void)showTimeViewFrombutton:(UIButton *)button
+{
+    CGRect frame = button.frame;
+    CGFloat position = button.layer.zPosition;
+    WKDateTimeView *dateTimeView = [[WKDateTimeView alloc] initWithFrame:(CGRect){0,0,self.frame.size.width, self.frame.size.height}];
+    dateTimeView.didSelectedTime = ^(NSString *time){
+        if (time)
+        {
+            self.time = time;
+            [self setNeedsDisplay];
+        }
+    };
+    CGRect dstFrame = (CGRect){50, 0, self.frame.size.width - 100, 40};
+    CGRect timeFrame = dateTimeView.frame;
+    dateTimeView.frame = dstFrame;
+    dateTimeView.tag = 777;
+    dateTimeView.time = self.time;
+    button.layer.zPosition = 1110;
+    button.backgroundColor = UIColor.whiteColor;
+    [UIView animateWithDuration:0.3f animations:^{
+        button.frame = dstFrame;
+    } completion:^(BOOL finished) {
+        button.frame = frame;
+        button.layer.zPosition = position;
+        [self addSubview:dateTimeView];
+        [UIView animateWithDuration:0.3f animations:^{
+            dateTimeView.frame = timeFrame;
         }];
     }];
 }

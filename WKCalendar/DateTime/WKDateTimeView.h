@@ -10,4 +10,7 @@
 
 @interface WKDateTimeView : UIView
 
+@property (nonatomic, copy) void (^didSelectedTime)(NSString *time);
+@property (nonatomic) NSString *time;
+
 @end

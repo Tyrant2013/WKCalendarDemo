@@ -12,6 +12,7 @@
 
 @optional
 - (void)didButtonClick:(UIButton *)button;
+- (void)didFunctionButtonClick:(UIButton *)button withTime:(NSString *)time;
 
 @end
 

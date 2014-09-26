@@ -10,4 +10,6 @@
 
 @interface WKHourMinuteView : UIView
 
+@property (nonatomic, copy) void (^didSelectedTime)(NSString *time);
+
 @end
