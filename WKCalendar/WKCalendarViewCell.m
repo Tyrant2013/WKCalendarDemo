@@ -143,10 +143,7 @@
 - (void)addText:(CGContextRef)context rect:(CGRect)rect
 {
     UIColor *textColor = self.textColor;
-    if (self.isSelected)
-    {
-        textColor = UIColor.blackColor;
-    }
+    
     if (self.isCurrentDay)
     {
         textColor = UIColor.whiteColor;
@@ -154,6 +151,18 @@
     if (!self.isWorkday)
     {
         textColor = UIColor.redColor;
+    }
+    if (!self.isWorkday && self.isCurrentDay)
+    {
+        textColor = UIColor.whiteColor;
+    }
+    if (self.isSelected && !self.isWorkday)
+    {
+        textColor = UIColor.redColor;
+    }
+    if (!self.isWorkday && self.isCurrentDay && self.isSelected)
+    {
+        textColor = UIColor.whiteColor;
     }
     NSString *text = [NSString stringWithFormat:@"%d", self.day];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

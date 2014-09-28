@@ -30,9 +30,10 @@
 		EB68C57219BEA8A80017E28F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68C55419BEA8A80017E28F /* UIKit.framework */; };
 		EB68C57A19BEA8A80017E28F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB68C57819BEA8A80017E28F /* InfoPlist.strings */; };
 		EB68C57C19BEA8A80017E28F /* WKCalendarDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C57B19BEA8A80017E28F /* WKCalendarDemoTests.m */; };
-		EB68C58819BEAA4C0017E28F /* WKCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58719BEAA4C0017E28F /* WKCalendar.m */; };
 		EB68C58B19BEAA680017E28F /* WKCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58A19BEAA680017E28F /* WKCalendarView.m */; };
 		EB68C58E19BEAEBA0017E28F /* WKCalendarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */; };
+		EB80365019D7F4A80034B2F1 /* WKCalendarYearMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */; };
+		EBA0FCD719D7A8F00052BD22 /* WKCalendarDayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,12 +84,14 @@
 		EB68C57719BEA8A80017E28F /* WKCalendarDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WKCalendarDemoTests-Info.plist"; sourceTree = "<group>"; };
 		EB68C57919BEA8A80017E28F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EB68C57B19BEA8A80017E28F /* WKCalendarDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKCalendarDemoTests.m; sourceTree = "<group>"; };
-		EB68C58619BEAA4C0017E28F /* WKCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendar.h; path = WKCalendar/WKCalendar.h; sourceTree = "<group>"; };
-		EB68C58719BEAA4C0017E28F /* WKCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendar.m; path = WKCalendar/WKCalendar.m; sourceTree = "<group>"; };
 		EB68C58919BEAA680017E28F /* WKCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarView.h; path = WKCalendar/WKCalendarView.h; sourceTree = "<group>"; };
 		EB68C58A19BEAA680017E28F /* WKCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarView.m; path = WKCalendar/WKCalendarView.m; sourceTree = "<group>"; };
 		EB68C58C19BEAEBA0017E28F /* WKCalendarViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarViewCell.h; path = WKCalendar/WKCalendarViewCell.h; sourceTree = "<group>"; };
 		EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarViewCell.m; path = WKCalendar/WKCalendarViewCell.m; sourceTree = "<group>"; };
+		EB80364E19D7F4A80034B2F1 /* WKCalendarYearMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarYearMonthView.h; path = WKCalendar/WKCalendarYearMonthView.h; sourceTree = "<group>"; };
+		EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarYearMonthView.m; path = WKCalendar/WKCalendarYearMonthView.m; sourceTree = "<group>"; };
+		EBA0FCD519D7A8F00052BD22 /* WKCalendarDayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarDayView.h; path = WKCalendar/WKCalendarDayView.h; sourceTree = "<group>"; };
+		EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarDayView.m; path = WKCalendar/WKCalendarDayView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,8 +215,6 @@
 			isa = PBXGroup;
 			children = (
 				EB40E4D819D3E234006BB2FF /* DateTime */,
-				EB68C58619BEAA4C0017E28F /* WKCalendar.h */,
-				EB68C58719BEAA4C0017E28F /* WKCalendar.m */,
 				EB68C58919BEAA680017E28F /* WKCalendarView.h */,
 				EB68C58A19BEAA680017E28F /* WKCalendarView.m */,
 				EB68C58C19BEAEBA0017E28F /* WKCalendarViewCell.h */,
@@ -224,6 +225,10 @@
 				EB5B39B419D15E1400421C65 /* WKMonthView.m */,
 				EB5B39B619D1762000421C65 /* WKYearView.h */,
 				EB5B39B719D1762000421C65 /* WKYearView.m */,
+				EBA0FCD519D7A8F00052BD22 /* WKCalendarDayView.h */,
+				EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */,
+				EB80364E19D7F4A80034B2F1 /* WKCalendarYearMonthView.h */,
+				EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */,
 			);
 			name = WKCalendar;
 			sourceTree = "<group>";
@@ -327,6 +332,7 @@
 			files = (
 				EB40E4E719D3E3E9006BB2FF /* WKDateTimeHeaderView.m in Sources */,
 				EB50AC4019D0192B004EE10B /* ArrowButton.m in Sources */,
+				EB80365019D7F4A80034B2F1 /* WKCalendarYearMonthView.m in Sources */,
 				EB40E4E419D3E34E006BB2FF /* WKDateTimeViewCell.m in Sources */,
 				EB68C56719BEA8A80017E28F /* ViewController.m in Sources */,
 				EB68C56119BEA8A80017E28F /* AppDelegate.m in Sources */,
@@ -338,8 +344,8 @@
 				EB5B39B819D1762000421C65 /* WKYearView.m in Sources */,
 				EB61691E19D3FE6300FC6356 /* WKMinuteView.m in Sources */,
 				EB68C55D19BEA8A80017E28F /* main.m in Sources */,
+				EBA0FCD719D7A8F00052BD22 /* WKCalendarDayView.m in Sources */,
 				EB68C58E19BEAEBA0017E28F /* WKCalendarViewCell.m in Sources */,
-				EB68C58819BEAA4C0017E28F /* WKCalendar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

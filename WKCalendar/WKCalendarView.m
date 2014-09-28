@@ -7,11 +7,14 @@
 //
 
 #import "WKCalendarView.h"
-#import "WKCalendar.h"
 #import "ArrowButton.h"
 #import "WKMonthView.h"
 #import "WKYearView.h"
 #import "DateTime/WKDateTimeView.h"
+#import "WKCalendarDayView.h"
+#import "WKCalendarYearMonthView.h"
+
+#define MONTH_DAY_PANEL_VIEW_TAG 328
 
 typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 {
@@ -21,9 +24,11 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     WKCalendarAnimationDirectionLeft
 };
 
-@interface WKCalendarView()
+@interface WKCalendarView()<
+  WKCalendarDayViewDelegate,
+  WKCalendarYearMonthViewDelegate
+>
 
-@property (nonatomic) WKCalendar *calendar;
 @property (nonatomic) NSInteger colTotal;//number of col
 @property (nonatomic) NSInteger rowTotal;//number of row
 @property (nonatomic) NSInteger cellWidth;//with of cell
@@ -63,13 +68,12 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     
     _resultType = WKCalendarViewTypeDouble;
     _isShowAnimation = NO;
-    _calendar = [[WKCalendar alloc] init];
     _colTotal = 7;
     _rowTotal = 5;
     _colPadding = 2;
     _rowPadding = 2;
-    _headerTotalHeight = 100;
-    _heaerResultHeight = 40;
+    _headerTotalHeight = 80;
+    _heaerResultHeight = 30;
     
     _cellWidth = (self.frame.size.width - (self.colPadding * self.colTotal)) / self.colTotal;
     _cellHeight = (self.frame.size.height - self.headerTotalHeight - (self.rowPadding * self.rowTotal)) / self.rowTotal;
@@ -92,14 +96,6 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     _currentDay = components.day;
     _currentMonth = components.month;
     _currentYear = components.year;
-    
-    UISwipeGestureRecognizer *swipeRightGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
-    swipeRightGesture.direction = UISwipeGestureRecognizerDirectionRight;
-    [self addGestureRecognizer:swipeRightGesture];
-    
-    UISwipeGestureRecognizer *swipeLeftGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
-    swipeLeftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self addGestureRecognizer:swipeLeftGesture];
     
     UISwipeGestureRecognizer *swipeUpGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)];
     swipeUpGesture.direction = UISwipeGestureRecognizerDirectionUp;
@@ -125,14 +121,10 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         case UISwipeGestureRecognizerDirectionDown:
             [self showYearViewForSelected];
             break;
-        case UISwipeGestureRecognizerDirectionLeft:
-            [self preMonth:nil];
-            break;
-        case UISwipeGestureRecognizerDirectionRight:
-            [self nextMonth:nil];
-            break;
         case UISwipeGestureRecognizerDirectionUp:
             [self showMonthViewForSelected];
+            break;
+        default:
             break;
     }
 }
@@ -162,8 +154,6 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         [self.delegate calendarView:self didSelectedChange:result];
     }
     
-    [self addShadow];
-    
     [self addButton];
     [self addResult];
     
@@ -175,19 +165,6 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     [self addDayPanel:context offset:colOffset rect:rect];
 }
 
-//添加阴影
-- (void)addShadow
-{
-    CALayer *shadow = [CALayer layer];
-    shadow.frame = self.bounds;
-    shadow.shadowColor = UIColor.lightGrayColor.CGColor;
-    shadow.shadowOffset = (CGSize){10, 10};
-    shadow.shadowOpacity = 0.8f;
-    shadow.shadowRadius = 10.0f;
-    
-    [self.layer addSublayer:shadow];
-}
-
 //添加两边的按钮
 - (void)addButton
 {
@@ -195,7 +172,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     CGFloat x = 0;
     CGFloat y = 0;
     CGFloat buttonWidth = 50;
-    CGFloat height = self.heaerResultHeight - 4;
+    CGFloat height = self.heaerResultHeight - 2;
     if (![self viewWithTag:9001])
     {
         UIButton *leftButton = [[UIButton alloc] initWithFrame:(CGRect){x, y, buttonWidth, height}];
@@ -234,9 +211,11 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     {
         case WKCalendarViewTypeSimple:
         case WKCalendarViewTypeSimpleDateTime:
+        case WKCalendarViewTypeSimpleYearMonth:
             [self addSimpleResult];
             break;
         case WKCalendarViewTypeDouble:
+        case WKCalendarViewTypeDoubleYearMonth:
             [self addRangeResult];
             break;
     }
@@ -323,7 +302,14 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     NSString *date;
     NSString *monValue = [NSString stringWithFormat:month >= 10 ? @"%d": @"0%d", month];
     NSString *dayValue = [NSString stringWithFormat:day >= 10 ? @"%d": @"0%d", day];
-    date = [NSString stringWithFormat:@"%d-%@-%@", year, monValue, dayValue];
+    if (self.resultType == WKCalendarViewTypeSimpleYearMonth || self.resultType == WKCalendarViewTypeDoubleYearMonth)
+    {
+        date = [NSString stringWithFormat:@"%d-%@", year, monValue];
+    }
+    else
+    {
+        date = [NSString stringWithFormat:@"%d-%@-%@", year, monValue, dayValue];
+    }
     return date;
 }
 
@@ -344,9 +330,11 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         switch (self.resultType)
         {
             case WKCalendarViewTypeSimple:
+            case WKCalendarViewTypeSimpleYearMonth:
                 startDate = endDate = [NSString stringWithFormat:@"%d-%d-%d", self.year, self.month, self.day];
                 break;
             case WKCalendarViewTypeDouble:
+            case WKCalendarViewTypeDoubleYearMonth:
                 startDate = [NSString stringWithFormat:@"%d-%d-%d", self.beginYear, self.beginMonth, self.beginDay];
                 endDate = [NSString stringWithFormat:@"%d-%d-%d", self.endYear, self.endMonth, self.endDay];
                 break;
@@ -367,7 +355,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         ArrowButton *left = [[ArrowButton alloc] initWithFrame:(CGRect){0, y, 44, height}];
         left.backgroundColor = UIColor.whiteColor;
         left.tag = 1001;
-        [left addTarget:self action:@selector(preMonth:) forControlEvents:UIControlEventTouchUpInside];
+        [left addTarget:self action:@selector(preButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:left];
     }
     
@@ -377,47 +365,80 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         right.backgroundColor = UIColor.whiteColor;
         right.layer.transform = CATransform3DMakeRotation(M_PI, 0, 1, 0);
         right.tag = 1002;
-        [right addTarget:self action:@selector(nextMonth:) forControlEvents:UIControlEventTouchUpInside];
+        [right addTarget:self action:@selector(nextButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:right];
     }
 }
 
-- (void)preMonth:(UIButton *)button
+- (void)preButtonClick:(UIButton *)button
 {
-    --self.month;
-    if (self.month <= 0)
+    if (self.resultType != WKCalendarViewTypeSimpleYearMonth && self.resultType != WKCalendarViewTypeDoubleYearMonth)
     {
-        self.month = 12;
+        --self.month;
+        if (self.month <= 0)
+        {
+            self.month = 12;
+            --self.year;
+        }
+        self.isShowAnimation = YES;
+    }
+    else
+    {
         --self.year;
     }
-    self.isShowAnimation = YES;
-
     [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionLeft];
 }
 
-- (void)nextMonth:(UIButton *)button
+- (void)nextButtonClick:(UIButton *)button
 {
-    ++self.month;
-    if (self.month > 12)
+    if (self.resultType == WKCalendarViewTypeDoubleYearMonth || self.resultType == WKCalendarViewTypeSimpleYearMonth)
     {
-        self.month = 1;
         ++self.year;
     }
-    self.isShowAnimation = YES;
-    
+    else
+    {
+        ++self.month;
+        if (self.month > 12)
+        {
+            self.month = 1;
+            ++self.year;
+        }
+        self.isShowAnimation = YES;
+    }
     [self beginAnimationForSwapMonth:nil direction:WKCalendarAnimationDirectionRight];
 }
 
 - (void)beginAnimationForSwapMonth:(UIView *)oldMonthView direction:(WKCalendarAnimationDirection)direction
 {
-    if (oldMonthView == nil)
+    CGRect frame;
+    if (self.resultType == WKCalendarViewTypeSimpleYearMonth || self.resultType == WKCalendarViewTypeDoubleYearMonth)
     {
-        oldMonthView = [self snapshotViewAfterScreenUpdates:NO];
-        [self setNeedsDisplay];
+        WKCalendarYearMonthView *yearMonthView = (WKCalendarYearMonthView *)[self viewWithTag:MONTH_DAY_PANEL_VIEW_TAG];
+        frame = yearMonthView.frame;
+        if (!oldMonthView)
+        {
+            [self setNeedsDisplay];
+            oldMonthView = [yearMonthView snapshotViewAfterScreenUpdates:NO];
+        }
     }
+    else
+    {
+        WKCalendarDayView *dayView = (WKCalendarDayView *)[self viewWithTag:MONTH_DAY_PANEL_VIEW_TAG];
+        dayView.day = self.day;
+        dayView.month = self.month;
+        dayView.year = self.year;
+        frame = dayView.frame;
+        if (!oldMonthView)
+        {
+            [self setNeedsDisplay];
+            oldMonthView = [dayView snapshotViewAfterScreenUpdates:NO];
+            [dayView reloadData];
+        }
+    }
+    
     oldMonthView.backgroundColor = UIColor.whiteColor;
     oldMonthView.layer.zPosition = 1024;
-    CGRect frame = oldMonthView.frame;
+    oldMonthView.frame = frame;
     [self addSubview:oldMonthView];
     switch (direction)
     {
@@ -444,26 +465,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 //添加年月信息
 - (void)addTitleInfomation:(CGContextRef)context offset:(NSInteger)colOffset
 {
-//    CGContextSaveGState(context);
-//    CGFloat x = 44 + colOffset;
-//    CGFloat y = self.heaerResultHeight + 5;
-//    NSInteger width = self.frame.size.width - x * 2 - colOffset * 2;
-//    NSInteger height = 20;
-//    
-//    NSString *yearMonth = [NSString stringWithFormat:@"%d 年 %d 月", self.year, self.month];
-//    
-//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//    paragraphStyle.alignment = NSTextAlignmentCenter;
-//    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-//    dic[NSParagraphStyleAttributeName] = paragraphStyle;
-//    dic[NSFontAttributeName] = [UIFont systemFontOfSize:18];
-//    
-//    CGRect frame = (CGRect){x, y, width, height};
-//    [yearMonth drawInRect:frame withAttributes:dic];
-//    
-//    CGContextRestoreGState(context);
     CGFloat x = 45;
-    CGFloat y = self.heaerResultHeight + 5;
+    CGFloat y = self.heaerResultHeight + 2;
     CGFloat width = (self.frame.size.width - 88) / 2 - 1;
     CGColorRef borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
     if (self.resultType == WKCalendarViewTypeSimpleDateTime)
@@ -541,210 +544,37 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 //添加日期面板
 - (void)addDayPanel:(CGContextRef)context offset:(NSInteger)colOffset rect:(CGRect)rect
 {
-    NSInteger dayOfMonth = [self getTotalDayInMonth:self.month year:self.year];
-    NSInteger preDayOfMonth = [self getTotalDayInMonth:self.month - 1 year:self.year];
-    NSInteger firstWeekday = [self getWeekdayInDay:1 month:self.month year:self.year] - 1;
-    for (UIView *view in self.subviews)
+    if (self.resultType == WKCalendarViewTypeDoubleYearMonth || self.resultType == WKCalendarViewTypeSimpleYearMonth)
     {
-        if (view.tag == 1000)
-           [ view removeFromSuperview];
-    }
-    
-    
-
-    NSDateComponents *beginCompare = [[NSDateComponents alloc] init];
-    NSDateComponents *endCompare = [[NSDateComponents alloc] init];
-    
-    NSDate *beginDate = [self dateFormYear:self.beginYear month:self.beginMonth day:self.beginDay];
-    NSDate *endDate = [self dateFormYear:self.endYear month:self.endMonth day:self.endDay];
-
-    for (int i = 0; i < self.rowTotal; ++i)
-    {
-        NSInteger y = (self.cellHeight + self.rowPadding ) * i + self.headerTotalHeight;
-        for (int j = 0; j < self.colTotal; ++j)
+        WKCalendarYearMonthView *yearMonthView = (WKCalendarYearMonthView *)[self viewWithTag:MONTH_DAY_PANEL_VIEW_TAG];
+        if (!yearMonthView)
         {
-            NSInteger checkDay = j + 1 + i * self.colTotal - firstWeekday;
-            NSInteger day = 0, month = self.month, year = self.year;
-            UITapGestureRecognizer *tapGesture;
-            NSInteger x = (self.cellWidth + self.colPadding ) * j + colOffset;
-            WKCalendarViewCell *cell = [[WKCalendarViewCell alloc] initWithFrame:(CGRect){
-                x,
-                y,
-                self.cellWidth,
-                self.cellHeight
-            }];
-            if (checkDay <= 0)
-            {
-//                continue;//确定1号开始的位置
-                day = preDayOfMonth + checkDay;
-                --month;
-                tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(preMonthCellDidTouchedUpInside:)];
-                cell.isCurrentMonthDay = NO;
-            }
-            else if (--dayOfMonth < 0)
-            {
-//                break;//最后一天
-                day = abs(dayOfMonth);
-                ++month;
-                tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nextMonthCellDidTouchedUpInside:)];
-                cell.isCurrentMonthDay = NO;
-            }
-            else
-            {
-                day = checkDay;
-                tapGesture  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellDidTouchedUpInside:)];
-                cell.isCurrentMonthDay = YES;
-            }
-            NSDate *date = [self dateFormYear:year month:month day:day];
-            
-            cell.tag = 1000;
-            cell.day = day;
-            cell.isWorkday = !(j == 0 || j == 6);
-            cell.isCurrentDay = day == self.currentDay && self.year == self.currentYear && self.month == self.currentMonth;
-            if (self.resultType == WKCalendarViewTypeDouble)
-            {
-                beginCompare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:beginDate options:NSCalendarWrapComponents];
-                endCompare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:endDate options:NSCalendarWrapComponents];
-                cell.isSelected = (beginCompare.day < 0 && endCompare.day > 0) || beginCompare.day == 0 || endCompare.day == 0;
-            }
-            else
-            {
-                cell.isSelected = day == self.day && (dayOfMonth >= 0) && (checkDay > 0);
-            }
-            
-            [cell addGestureRecognizer:tapGesture];
-            [self addSubview:cell];
-        }
-        if (i == 0)
-        {
-            CGContextSaveGState(context);
-            [UIColor.lightGrayColor setStroke];
-            CGContextMoveToPoint(context, colOffset, y - self.rowPadding);
-            CGContextAddLineToPoint(context, rect.size.width - colOffset, y - self.rowPadding);
-            CGContextStrokePath(context);
-            CGContextRestoreGState(context);
-        }
-    }
-    
-}
-
-//获取指定年月的天数
-- (NSInteger)getTotalDayInMonth:(NSInteger)month year:(NSInteger)year
-{
-    NSDateComponents *components = [[NSDateComponents alloc] init];
-    components.day = 1;
-    components.month = month;
-    components.year = year;
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDate *date = [calendar dateFromComponents:components];
-    NSRange range = [calendar rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:date];
-    return range.length;
-}
-
-//获取指定日期是星期几
-- (NSInteger)getWeekdayInDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
-{
-    NSDateComponents *components = [[NSDateComponents alloc] init];
-    components.day = day;
-    components.month = month;
-    components.year = year;
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDate *date = [calendar dateFromComponents:components];
-    
-    NSDateComponents *weekDayCompnents = [calendar components:NSWeekdayCalendarUnit fromDate:date];
-    return weekDayCompnents.weekday;
-}
-
-- (void)cellDidTouchedUpInside:(UITapGestureRecognizer *)tapGuesture
-{
-    WKCalendarViewCell *cell = (WKCalendarViewCell *)tapGuesture.view;
-    NSInteger day = cell.day;
-    switch (self.resultType)
-    {
-        case WKCalendarViewTypeSimple:
-            case WKCalendarViewTypeSimpleDateTime:
-            [self dealWithSimpleWithDay:day];
-            break;
-        case WKCalendarViewTypeDouble:
-            [self dealWithRangeWithDay:day month:self.month year:self.year];
-            break;
-    }
-    
-    [self setNeedsDisplay];
-}
-
-//上一个月的天数
-- (void)preMonthCellDidTouchedUpInside:(UITapGestureRecognizer *)tapGuesture
-{
-    [self preMonth:nil];
-    
-    [self cellDidTouchedUpInside:tapGuesture];
-}
-
-//下一个月的天数
-- (void)nextMonthCellDidTouchedUpInside:(UITapGestureRecognizer *)tapGuesture
-{
-    [self nextMonth:nil];
-    
-    [self cellDidTouchedUpInside:tapGuesture];
-}
-
-- (void)dealWithSimpleWithDay:(NSInteger)day
-{
-    self.day = day;
-}
-
-- (void)dealWithRangeWithDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
-{
-    if (self.beginDay == 0)
-    {
-        self.beginDay = day;
-        self.beginMonth = month;
-        self.beginYear = year;
-    }
-    else
-    {
-        if (self.beginDay == day && month == self.beginMonth && year == self.beginYear)
-        {
-            self.beginDay = self.endDay;
-            self.beginMonth = self.endMonth;
-            self.beginYear = self.endYear;
-            self.endDay = self.endMonth = self.endYear = 0;
-        }
-        else if (self.endDay == day && month == self.endMonth && year == self.endYear)
-        {
-            self.endDay = self.endMonth = self.endYear = 0;
+            yearMonthView = [[WKCalendarYearMonthView alloc] initWithYear:self.year month:self.month frame:(CGRect){0, self.headerTotalHeight - 20, rect.size.width, rect.size.height - self.headerTotalHeight + 20}];
+            yearMonthView.delegate = self;
+            yearMonthView.tag = MONTH_DAY_PANEL_VIEW_TAG;
+            [self addSubview:yearMonthView];
         }
         else
         {
-            if (self.endDay > 0)
-            {
-                NSDate *date = [self dateFormYear:year month:month day:day];
-                NSDate *beginDate = [self dateFormYear:self.beginYear month:self.beginMonth day:self.beginDay];
-                NSDateComponents *compare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:beginDate options:NSCalendarWrapComponents];
-                if (compare.day > 0)
-                {
-                    self.beginDay = day;
-                    self.beginMonth = month;
-                    self.beginYear = year;
-                }
-                else
-                {
-                    self.endDay = day;
-                    self.endMonth = month;
-                    self.endYear = year;
-                }
-            }
-            else
-            {
-                self.endDay = day;
-                self.endMonth = month;
-                self.endYear = year;
-            }
+            yearMonthView.year = self.year;
+            yearMonthView.month = self.month;
         }
     }
-    
-    [self swapSelectedDay];
+    else
+    {
+        WKCalendarDayView *dayView = (WKCalendarDayView *)[self viewWithTag:MONTH_DAY_PANEL_VIEW_TAG];
+        if (!dayView)
+        {
+            dayView = [[WKCalendarDayView alloc] initWithYear:self.year month:self.month day:self.day frame:(CGRect){0, self.headerTotalHeight, rect.size.width,rect.size.height - self.headerTotalHeight}];
+            dayView.delegate = self;
+            dayView.tag = MONTH_DAY_PANEL_VIEW_TAG;
+            [self addSubview:dayView];
+        }
+        else
+        {
+            //            [dayView reloadData];
+        }
+    }
 }
 
 //交换开始日期和结束日期
@@ -798,7 +628,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     }
     else
     {
-        WKMonthView *monthView = [[WKMonthView alloc] initWithFrame:(CGRect){0, self.headerTotalHeight - 20, self.frame.size.width, self.frame.size.height - self.headerTotalHeight + 20}];
+        WKMonthView *monthView = [[WKMonthView alloc] initWithFrame:(CGRect){0, 0, self.frame.size.width, self.frame.size.height}];
         monthView.tag = 666;
         monthView.layer.zPosition = 1110;
         monthView.selectedMonth = self.month;
@@ -836,6 +666,11 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 
 - (void)showMonthViewFromButton:(UIButton *)button
 {
+    if (self.resultType == WKCalendarViewTypeSimpleYearMonth || self.resultType == WKCalendarViewTypeDoubleYearMonth)
+    {
+        //do nothing
+        return;
+    }
     CGRect frame = button.frame;
     CGFloat position = button.layer.zPosition;
     
@@ -923,6 +758,142 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
             dateTimeView.frame = timeFrame;
         }];
     }];
+}
+
+#pragma mark - WKCalendarDayView Delegate
+
+- (BOOL)calendarDayView:(WKCalendarDayView *)calendarDayview willDisplaySelectedWithYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day
+{
+    if (self.resultType == WKCalendarViewTypeDouble)
+    {
+        NSDateComponents *beginCompare = [[NSDateComponents alloc] init];
+        NSDateComponents *endCompare = [[NSDateComponents alloc] init];
+        NSDate *beginDate = [self dateFormYear:self.beginYear month:self.beginMonth day:self.beginDay];
+        NSDate *endDate = [self dateFormYear:self.endYear month:self.endMonth day:self.endDay];
+        NSDate *date = [self dateFormYear:year month:month day:day];
+        beginCompare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:beginDate options:NSCalendarWrapComponents];
+        endCompare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:endDate options:NSCalendarWrapComponents];
+//        NSLog(@"%d", (beginCompare.day < 0 && endCompare.day > 0) || beginCompare.day == 0 || endCompare.day == 0);
+        return (beginCompare.day < 0 && endCompare.day > 0) || beginCompare.day == 0 || endCompare.day == 0;
+    }
+    else
+    {
+        return (day == self.day && month == self.month && year == self.year);
+    }
+    
+}
+
+- (void)calendarDayView:(WKCalendarDayView *)calendarDayView didSelectedPreMonthDay:(NSInteger)day
+{
+    [self didSelectedDay:day month:calendarDayView.month year:calendarDayView.year];
+}
+
+- (void)calendarDayView:(WKCalendarDayView *)calendarDayView didSelectedCurrentMonthDay:(NSInteger)day
+{
+    [self didSelectedDay:day month:calendarDayView.month year:calendarDayView.year];
+}
+
+- (void)calendarDayView:(WKCalendarDayView *)calendarDayView didSelectedNextMonthDay:(NSInteger)day
+{
+    [self didSelectedDay:day month:calendarDayView.month year:calendarDayView.year];
+}
+
+- (void)calendarDayView:(WKCalendarDayView *)calendarDayView didMonthChange:(NSInteger)month
+{
+    self.month = month;
+    [self setNeedsDisplay];
+}
+
+- (void)didSelectedDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
+{
+    switch (self.resultType)
+    {
+        case WKCalendarViewTypeSimple:
+        case WKCalendarViewTypeSimpleDateTime:
+        case WKCalendarViewTypeSimpleYearMonth:
+            [self dealWithSimpleWithDay:day month:month year:year];
+            break;
+            
+        case WKCalendarViewTypeDouble:
+        case WKCalendarViewTypeDoubleYearMonth:
+            [self dealWithRangeWithDay:day month:month year:year];
+            break;
+    }
+    [self setNeedsDisplay];
+}
+
+- (void)dealWithSimpleWithDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
+{
+    self.day = day;
+    self.month = month;
+    self.year = year;
+}
+
+- (void)dealWithRangeWithDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
+{
+    if (self.beginDay == 0)
+    {
+        self.beginDay = day;
+        self.beginMonth = month;
+        self.beginYear = year;
+    }
+    else
+    {
+        if (self.beginDay == day && month == self.beginMonth && year == self.beginYear)
+        {
+            self.beginDay = self.endDay;
+            self.beginMonth = self.endMonth;
+            self.beginYear = self.endYear;
+            self.endDay = self.endMonth = self.endYear = 0;
+        }
+        else if (self.endDay == day && month == self.endMonth && year == self.endYear)
+        {
+            self.endDay = self.endMonth = self.endYear = 0;
+        }
+        else
+        {
+            if (self.endDay > 0)
+            {
+                NSDate *date = [self dateFormYear:year month:month day:day];
+                NSDate *beginDate = [self dateFormYear:self.beginYear month:self.beginMonth day:self.beginDay];
+                NSDateComponents *compare = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:date toDate:beginDate options:NSCalendarWrapComponents];
+                if (compare.day > 0)
+                {
+                    self.beginDay = day;
+                    self.beginMonth = month;
+                    self.beginYear = year;
+                }
+                else
+                {
+                    self.endDay = day;
+                    self.endMonth = month;
+                    self.endYear = year;
+                }
+            }
+            else
+            {
+                self.endDay = day;
+                self.endMonth = month;
+                self.endYear = year;
+            }
+        }
+    }
+    
+    [self swapSelectedDay];
+}
+
+#pragma mark - WKCalendarYearView Delegate
+
+- (void)calendarYearMonthView:(WKCalendarYearMonthView *)calendarYearMonthView didSelectedMonth:(NSInteger)month
+{
+    self.month = month;
+    [self setNeedsDisplay];
+}
+
+- (void)calendarYearMonthView:(WKCalendarYearMonthView *)calendarYearMonthView didYearChange:(NSInteger)year
+{
+    self.year = year;
+    [self setNeedsDisplay];
 }
 
 @end

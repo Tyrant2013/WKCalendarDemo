@@ -13,7 +13,9 @@ typedef NS_ENUM(NSInteger, WKCalendarViewType)
 {
     WKCalendarViewTypeSimple,
     WKCalendarViewTypeDouble,
-    WKCalendarViewTypeSimpleDateTime
+    WKCalendarViewTypeSimpleDateTime,
+    WKCalendarViewTypeSimpleYearMonth,
+    WKCalendarViewTypeDoubleYearMonth
 };
 
 @interface WKCalendarView : UIView
