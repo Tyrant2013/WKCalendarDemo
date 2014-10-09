@@ -23,7 +23,7 @@
     
     self.view.backgroundColor = UIColor.whiteColor;
     WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){10,150,0,0}];
-    calendar.resultType = WKCalendarViewTypeSimpleYearMonth;
+    calendar.resultType = WKCalendarViewTypeSimple;
     [self.view addSubview:calendar];
 }
 

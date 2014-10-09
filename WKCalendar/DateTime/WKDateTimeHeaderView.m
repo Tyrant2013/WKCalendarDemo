@@ -40,7 +40,7 @@
     CGFloat height = self.frame.size.height - 10;
     CGFloat x = (self.frame.size.width - width * 2 - 7) / 2;
     CGFloat y = (self.frame.size.height - height) / 2;
-    UIColor *borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
+    UIColor *borderColor = grayColor240;
     
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     cancelButton.frame = (CGRect){0, 0, btnWidth, btnHeight};

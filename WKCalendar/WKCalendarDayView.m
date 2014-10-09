@@ -79,18 +79,18 @@
     switch (gesture.direction)
     {
         case UISwipeGestureRecognizerDirectionLeft:
-            if (--self.month < 1)
-            {
-                self.month = 12;
-                --self.year;
-            }
-            [self animationForSwipe:-1];
-            break;
-        case UISwipeGestureRecognizerDirectionRight:
             if (++self.month > 12)
             {
                 self.month = 1;
                 ++self.year;
+            }
+            [self animationForSwipe:-1];
+            break;
+        case UISwipeGestureRecognizerDirectionRight:
+            if (--self.month < 1)
+            {
+                self.month = 12;
+                --self.year;
             }
             [self animationForSwipe:1];
             break;

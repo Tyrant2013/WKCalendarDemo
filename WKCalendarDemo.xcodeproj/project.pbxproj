@@ -90,6 +90,7 @@
 		EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarViewCell.m; path = WKCalendar/WKCalendarViewCell.m; sourceTree = "<group>"; };
 		EB80364E19D7F4A80034B2F1 /* WKCalendarYearMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarYearMonthView.h; path = WKCalendar/WKCalendarYearMonthView.h; sourceTree = "<group>"; };
 		EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarYearMonthView.m; path = WKCalendar/WKCalendarYearMonthView.m; sourceTree = "<group>"; };
+		EB8973AB19E61F2100772B7C /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../Company/branches/Dev/EHRMobile/EHRMobile/Custom/WKCalendar/Macros.h; sourceTree = "<group>"; };
 		EBA0FCD519D7A8F00052BD22 /* WKCalendarDayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarDayView.h; path = WKCalendar/WKCalendarDayView.h; sourceTree = "<group>"; };
 		EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarDayView.m; path = WKCalendar/WKCalendarDayView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -229,6 +230,7 @@
 				EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */,
 				EB80364E19D7F4A80034B2F1 /* WKCalendarYearMonthView.h */,
 				EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */,
+				EB8973AB19E61F2100772B7C /* Macros.h */,
 			);
 			name = WKCalendar;
 			sourceTree = "<group>";

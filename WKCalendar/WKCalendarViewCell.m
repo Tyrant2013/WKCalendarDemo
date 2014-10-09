@@ -63,7 +63,7 @@
 
 - (void)setLinearGradient:(CGContextRef)context rect:(CGRect)rect
 {
-    UIColor *startColor = [UIColor colorWithRed:240/255.0f green:240/255.0f blue:240/255.0f alpha:1.0f];
+    UIColor *startColor = grayColor240;
     CGFloat *startColorComponent = (CGFloat *)CGColorGetComponents(startColor.CGColor);
     
     UIColor *endColor = UIColor.grayColor;
@@ -113,14 +113,15 @@
 {
     size.width--;
     size.height--;
-    [[UIColor colorWithRed:200.0f/255.0f green:200.0f/255.0f blue:200.0f/255.0f alpha:1.0f] set];
+    
+    [ColorRGBA(200.0f, 200.0f, 200.0f, 1.0f) set];
 //    if (!self.isWorkday)
 //    {
 //        [[UIColor colorWithRed:200.0f/255.0f green:200.0f/255.0f blue:200.0f/255.0f alpha:1.0f] set];
 //    }
     if (!self.isCurrentMonthDay)
     {
-        [[UIColor colorWithRed:245.0f/255.0f green:245.0f/255.0f blue:245.0f/255.0f alpha:1.0f] set];
+        ColorRGBA(245.0f, 245.0f, 245.0f, 1.0f);
     }
     if (self.isSelected)
     {

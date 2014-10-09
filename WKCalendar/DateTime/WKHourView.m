@@ -69,7 +69,7 @@
             y = i * height;
             UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             button.frame = (CGRect){x, y, width, height};
-            button.layer.borderColor = [UIColor colorWithRed:240.0/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+            button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;
             button.tag = beginHour + (i * 3 + j);
             [button setTitle:[NSString stringWithFormat:@"%d", button.tag] forState:UIControlStateNormal];

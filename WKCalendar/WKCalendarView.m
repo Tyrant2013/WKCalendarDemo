@@ -468,7 +468,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
     CGFloat x = 45;
     CGFloat y = self.heaerResultHeight + 2;
     CGFloat width = (self.frame.size.width - 88) / 2 - 1;
-    CGColorRef borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+    CGColorRef borderColor = grayColor240.CGColor;
+    
     if (self.resultType == WKCalendarViewTypeSimpleDateTime)
     {
         width = (self.frame.size.width - 88) / 3 - 1;
@@ -801,6 +802,7 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 - (void)calendarDayView:(WKCalendarDayView *)calendarDayView didMonthChange:(NSInteger)month
 {
     self.month = month;
+    self.year = calendarDayView.year;
     [self setNeedsDisplay];
 }
 

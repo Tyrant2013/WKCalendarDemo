@@ -44,7 +44,7 @@
 {
     if (month == _month) return;
     [self viewWithTag:_month].backgroundColor = UIColor.whiteColor;
-    [self viewWithTag:month].backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
+    [self viewWithTag:month].backgroundColor = grayColor240;
     _month = month;
 }
 
@@ -77,14 +77,14 @@
             UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             button.frame = (CGRect){x, y, width, height};
             button.tag = i * 3 + j + 1;
-            button.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+            button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;
             NSString *title = [NSString stringWithFormat:@"%d月", button.tag];
             [button setTitle:title forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             if (button.tag == self.month)
             {
-                button.backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
+                button.backgroundColor = grayColor240;
             }
             [self addSubview:button];
         }
@@ -105,11 +105,11 @@
     switch (gesture.direction)
     {
         case UISwipeGestureRecognizerDirectionLeft:
-            --self.year;
+            ++self.year;
             [self animationForSwipe:-1];
             break;
         case UISwipeGestureRecognizerDirectionRight:
-            ++self.year;
+            --self.year;
             [self animationForSwipe:1];
             break;
         default:

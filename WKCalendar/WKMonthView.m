@@ -56,11 +56,11 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
             button.tag = i * 3 + j + 1;
             [button setTitle:[NSString stringWithFormat:@"%d", button.tag] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-            button.layer.borderColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f].CGColor;
+            button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;
             if (button.tag == self.selectedMonth)
             {
-                button.backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
+                button.backgroundColor = grayColor240;
             }
             [self addSubview:button];
         }
@@ -112,8 +112,8 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
 - (void)setSelectedMonth:(NSInteger)selectedMonth
 {
     _selectedMonth = selectedMonth;
-    [self viewWithTag:selectedMonth].backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
-    
+    NSLog(@"month background view");
+    [self viewWithTag:selectedMonth].backgroundColor = grayColor240;
     UIButton *button = (UIButton *)[self viewWithTag:-1];
     [button setTitle:[NSString stringWithFormat:@"%d 月", self.selectedMonth] forState:UIControlStateNormal];
 }
@@ -121,41 +121,9 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
 - (void)showInView:(UIView *)view
 {
     [view addSubview:self];
-//    [self addbackView:view.bounds];
     [view bringSubviewToFront:self];
     [self animationWithShow:YES direction:WKMonthViewAnimateDirectionUp month:self.selectedMonth];
 }
-
-//- (void)addbackView:(CGRect)rect
-//{
-//    UIView *backView = [[UIView alloc] initWithFrame:rect];
-//    backView.layer.cornerRadius = self.superview.layer.cornerRadius;
-//    backView.backgroundColor = [UIColor colorWithRed:240.0f/255.0f green:240.0f/255.0f blue:240.0f/255.0f alpha:1.0f];
-//    backView.tag = 2225;
-//    backView.layer.opacity = 0.3f;
-//    [self.superview addSubview:backView];
-//    
-//    UISwipeGestureRecognizer *up = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backViewRecognizer:)];
-//    up.direction = UISwipeGestureRecognizerDirectionUp;
-//    [backView addGestureRecognizer:up];
-//    
-//    UISwipeGestureRecognizer *down = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backViewRecognizer:)];
-//    down.direction = UISwipeGestureRecognizerDirectionDown;
-//    [backView addGestureRecognizer:down];
-//    
-//    UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backViewRecognizer:)];
-//    left.direction = UISwipeGestureRecognizerDirectionLeft;
-//    [backView addGestureRecognizer:left];
-//    
-//    UISwipeGestureRecognizer *right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backViewRecognizer:)];
-//    right.direction = UISwipeGestureRecognizerDirectionRight;
-//    [backView addGestureRecognizer:right];
-//}
-//
-//- (void)backViewRecognizer:(UISwipeGestureRecognizer *)gesture
-//{
-//    
-//}
 
 - (void)hiddenFromViewWithMonth:(NSInteger)month
 {
@@ -165,14 +133,11 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
 - (void)animationWithShow:(BOOL)show direction:(WKMonthViewAnimateDirection)direction month:(NSInteger)month
 {
     CGRect frame = self.frame;
-//    UIView *backView = [self.superview viewWithTag:2225];
     if (show)
     {
         self.frame = CGRectOffset(frame, 0, frame.size.height);
-//        backView.frame = CGRectOffset(backView.frame, 0, -backView.frame.size.height);
         [UIView animateWithDuration:0.25f delay:0 usingSpringWithDamping:0.6f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.frame = frame;
-//            backView.frame = CGRectOffset(backView.frame, 0, backView.frame.size.height);
         } completion:^(BOOL finished) {
             
         }];
@@ -180,17 +145,14 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
     else
     {
         CGFloat offset = direction == WKMonthViewAnimateDirectionDown ? frame.size.height : -(frame.size.height + frame.origin.y);
-//        CGFloat backOffset = (direction == WKMonthViewAnimateDirectionDown ? -1 : 1) * backView.frame.size.height;
         [UIView animateWithDuration:0.3f animations:^{
             self.frame = CGRectOffset(self.frame, 0, offset);
-//            backView.frame = CGRectOffset(backView.frame, 0, backOffset);
         } completion:^(BOOL finished) {
             if (self.didSelectedMonth)
             {
                 self.didSelectedMonth(month);
             }
             [self removeFromSuperview];
-//            [backView removeFromSuperview];
         }];
     }
 }
