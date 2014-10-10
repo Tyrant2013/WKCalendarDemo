@@ -87,6 +87,7 @@ typedef NS_ENUM(NSInteger, WKMinuteViewStyle)
     }
 }
 
+//点击按钮
 - (void)buttonClick:(UIButton *)button
 {
     if (self.curStyle == WKMinuteViewStyleNormal)

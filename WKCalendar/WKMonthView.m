@@ -112,7 +112,7 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
 - (void)setSelectedMonth:(NSInteger)selectedMonth
 {
     _selectedMonth = selectedMonth;
-    NSLog(@"month background view");
+
     [self viewWithTag:selectedMonth].backgroundColor = grayColor240;
     UIButton *button = (UIButton *)[self viewWithTag:-1];
     [button setTitle:[NSString stringWithFormat:@"%d 月", self.selectedMonth] forState:UIControlStateNormal];
