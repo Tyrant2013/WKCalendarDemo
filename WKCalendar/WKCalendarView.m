@@ -109,8 +109,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 - (NSString *)changeToTimeValueFormHour:(NSInteger)hour minute:(NSInteger)minute
 {
     NSString *time;
-    NSString *hourStr = [NSString stringWithFormat:hour >= 10 ? @"%d" : @"0%d", hour];
-    NSString *minStr = [NSString stringWithFormat:minute >= 10 ? @"%d" : @"0%d", minute];
+    NSString *hourStr = [NSString stringWithFormat:hour >= 10 ? @"%ld" : @"0%ld", (long)hour];
+    NSString *minStr = [NSString stringWithFormat:minute >= 10 ? @"%ld" : @"0%ld", (long)minute];
     time = [NSString stringWithFormat:@"%@:%@", hourStr, minStr];
     return time;
 }
@@ -300,15 +300,15 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 - (NSString *)changeToStringFromYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day
 {
     NSString *date;
-    NSString *monValue = [NSString stringWithFormat:month >= 10 ? @"%d": @"0%d", month];
-    NSString *dayValue = [NSString stringWithFormat:day >= 10 ? @"%d": @"0%d", day];
+    NSString *monValue = [NSString stringWithFormat:month >= 10 ? @"%ld": @"0%ld", (long)month];
+    NSString *dayValue = [NSString stringWithFormat:day >= 10 ? @"%ld": @"0%ld", (long)day];
     if (self.resultType == WKCalendarViewTypeSimpleYearMonth || self.resultType == WKCalendarViewTypeDoubleYearMonth)
     {
-        date = [NSString stringWithFormat:@"%d-%@", year, monValue];
+        date = [NSString stringWithFormat:@"%ld-%@", (long)year, monValue];
     }
     else
     {
-        date = [NSString stringWithFormat:@"%d-%@-%@", year, monValue, dayValue];
+        date = [NSString stringWithFormat:@"%ld-%@-%@", (long)year, monValue, dayValue];
     }
     return date;
 }
@@ -331,15 +331,15 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         {
             case WKCalendarViewTypeSimple:
             case WKCalendarViewTypeSimpleYearMonth:
-                startDate = endDate = [NSString stringWithFormat:@"%d-%d-%d", self.year, self.month, self.day];
+                startDate = endDate = [NSString stringWithFormat:@"%ld-%ld-%ld", self.year, self.month, (long)self.day];
                 break;
             case WKCalendarViewTypeDouble:
             case WKCalendarViewTypeDoubleYearMonth:
-                startDate = [NSString stringWithFormat:@"%d-%d-%d", self.beginYear, self.beginMonth, self.beginDay];
-                endDate = [NSString stringWithFormat:@"%d-%d-%d", self.endYear, self.endMonth, self.endDay];
+                startDate = [NSString stringWithFormat:@"%ld-%ld-%ld", self.beginYear, self.beginMonth, (long)self.beginDay];
+                endDate = [NSString stringWithFormat:@"%ld-%ld-%ld", self.endYear, self.endMonth, (long)self.endDay];
                 break;
             case WKCalendarViewTypeSimpleDateTime:
-                startDate = endDate = [NSString stringWithFormat:@"%d-%d-%d %@", self.year, self.month, self.day, self.time];
+                startDate = endDate = [NSString stringWithFormat:@"%ld-%ld-%ld %@", self.year, self.month, (long)self.day, self.time];
                 break;
         }
         [self.delegate calendarView:self didSelectedStartDate:startDate endDate:endDate];
@@ -517,8 +517,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
         [timeButton setTitle:[NSString stringWithFormat:@"%@", self.time] forState:UIControlStateNormal];
     }
     
-    [yearButton setTitle:[NSString stringWithFormat:@"%d 年",self.year] forState:UIControlStateNormal];
-    [monthButton setTitle:[NSString stringWithFormat:@"%d 月", self.month] forState:UIControlStateNormal];
+    [yearButton setTitle:[NSString stringWithFormat:@"%ld 年",(long)self.year] forState:UIControlStateNormal];
+    [monthButton setTitle:[NSString stringWithFormat:@"%ld 月", self.month] forState:UIControlStateNormal];
 }
 
 //添加星期行
@@ -796,7 +796,8 @@ typedef NS_ENUM(NSInteger, WKCalendarAnimationDirection)
 
 - (void)calendarDayView:(WKCalendarDayView *)calendarDayView didSelectedNextMonthDay:(NSInteger)day
 {
-    [self didSelectedDay:day month:calendarDayView.month year:calendarDayView.year];
+    NSInteger month = calendarDayView.month;
+    [self didSelectedDay:day month:month year:calendarDayView.year];
 }
 
 - (void)calendarDayView:(WKCalendarDayView *)calendarDayView didMonthChange:(NSInteger)month

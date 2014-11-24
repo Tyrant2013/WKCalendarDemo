@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
     UIButton *header = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     header.frame = (CGRect){0, 0, self.frame.size.width, self.headerHeight};
     header.tag = -1;
-    [header setTitle:[NSString stringWithFormat:@"%d", self.selectedMonth] forState:UIControlStateNormal];
+    [header setTitle:[NSString stringWithFormat:@"%ld", (long)self.selectedMonth] forState:UIControlStateNormal];
     [header addTarget:self action:@selector(hiddenUpSideWithAnimation) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:header];
     
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
             UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             button.frame = (CGRect){x, y, width, height};
             button.tag = i * 3 + j + 1;
-            [button setTitle:[NSString stringWithFormat:@"%d", button.tag] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%ld", (long)button.tag] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;
@@ -115,7 +115,7 @@ typedef NS_ENUM(NSInteger, WKMonthViewAnimateDirection)
 
     [self viewWithTag:selectedMonth].backgroundColor = grayColor240;
     UIButton *button = (UIButton *)[self viewWithTag:-1];
-    [button setTitle:[NSString stringWithFormat:@"%d 月", self.selectedMonth] forState:UIControlStateNormal];
+    [button setTitle:[NSString stringWithFormat:@"%ld 月", (long)self.selectedMonth] forState:UIControlStateNormal];
 }
 
 - (void)showInView:(UIView *)view

@@ -72,7 +72,7 @@
             button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;
             button.tag = beginHour + (i * 3 + j);
-            [button setTitle:[NSString stringWithFormat:@"%d", button.tag] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%ld", (long)button.tag] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(hourButtonClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.view addSubview:button];
         }

@@ -12,6 +12,8 @@
 
 @interface ViewController ()
 
+@property (nonatomic, weak) WKCalendarView *calendar;
+
 @end
 
 @implementation ViewController
@@ -25,6 +27,27 @@
     WKCalendarView *calendar = [[WKCalendarView alloc] initWithFrame:(CGRect){10,150,0,0}];
     calendar.resultType = WKCalendarViewTypeSimple;
     [self.view addSubview:calendar];
+    
+    self.calendar = calendar;
+}
+
+
+- (IBAction)switchType:(UISegmentedControl *)sender
+{
+    WKCalendarViewType t;
+    switch (sender.selectedSegmentIndex)
+    {
+        case 0:
+            t = WKCalendarViewTypeSimple;
+            break;
+        case 1:
+            t = WKCalendarViewTypeDoubleYearMonth;
+            break;
+        default:
+            t = WKCalendarViewTypeSimpleDateTime;
+            break;
+    }
+    self.calendar.resultType = t;
 }
 
 - (void)didReceiveMemoryWarning

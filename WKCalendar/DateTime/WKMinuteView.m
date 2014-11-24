@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, WKMinuteViewStyle)
             button.layer.borderColor = UIColor.grayColor.CGColor;
             button.layer.borderWidth = 1.0f;
             button.tag = i * 3 + j;
-            [button setTitle:[NSString stringWithFormat:@"%d0", button.tag] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%ld0", (long)button.tag] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:button];
         }
@@ -77,7 +77,7 @@ typedef NS_ENUM(NSInteger, WKMinuteViewStyle)
             button.layer.borderWidth = 1.0f;
             NSInteger num = number + i * 3 + j;
             button.tag = 1000 + num;
-            [button setTitle:[NSString stringWithFormat:@"%d", num] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%ld", (long)num] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:button];
             [UIView animateWithDuration:0.3f animations:^{

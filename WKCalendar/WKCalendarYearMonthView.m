@@ -79,7 +79,7 @@
             button.tag = i * 3 + j + 1;
             button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;
-            NSString *title = [NSString stringWithFormat:@"%d月", button.tag];
+            NSString *title = [NSString stringWithFormat:@"%ld月", (long)button.tag];
             [button setTitle:title forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             if (button.tag == self.month)

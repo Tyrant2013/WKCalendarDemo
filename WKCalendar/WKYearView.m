@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, WKYearViewAnimateDirection)
     UIButton *header = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     header.tag = -1;
     header.frame = (CGRect){0, 0, self.frame.size.width, self.headerHeight};
-    [header setTitle:[NSString stringWithFormat:@"%d 年", self.selectedYear] forState:UIControlStateNormal];
+    [header setTitle:[NSString stringWithFormat:@"%ld 年", (long)self.selectedYear] forState:UIControlStateNormal];
     [header addTarget:self action:@selector(hiddenDownWithAnimation) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:header];
     
@@ -146,7 +146,7 @@ typedef NS_ENUM(NSInteger, WKYearViewAnimateDirection)
             UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             button.frame = (CGRect){x, y, width, height};
             button.tag = self.currentFirstYear + (i * 3 + j);
-            [button setTitle:[NSString stringWithFormat:@"%d", button.tag] forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%ld", (long)button.tag] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             button.layer.borderColor = grayColor240.CGColor;
             button.layer.borderWidth = 1.0f;

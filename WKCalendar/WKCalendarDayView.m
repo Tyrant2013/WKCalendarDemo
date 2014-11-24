@@ -139,7 +139,14 @@
 - (void)addDayPanelWithOffset:(NSInteger)colOffset rect:(CGRect)rect
 {
     NSInteger dayOfMonth = [self getTotalDayInMonth:self.month year:self.year];
-    NSInteger preDayOfMonth = [self getTotalDayInMonth:self.month - 1 year:self.year];
+    NSInteger preMonth = self.month - 1;
+    NSInteger preYear = self.year;
+    if (preMonth == 0)
+    {
+        preMonth = 12;
+        --preYear;
+    }
+    NSInteger preDayOfMonth = [self getTotalDayInMonth:preMonth year:preYear];
     NSInteger firstWeekday = [self getWeekdayInDay:1 month:self.month year:self.year] - 1;
     for (UIView *view in self.subviews)
     {
@@ -177,7 +184,7 @@
             else if (--dayOfMonth < 0)
             {
                 //                break;//最后一天
-                day = abs(dayOfMonth);
+                day = -dayOfMonth;
                 if (++month > 12)
                 {
                     month = 1;
@@ -275,7 +282,7 @@
     self.day = day;
     if (++self.month > 12)
     {
-        self.month = 12;
+        self.month = 1;
         ++self.year;
     }
     if (self.delegate && [((NSObject *)self.delegate) respondsToSelector:@selector(calendarDayView:didSelectedNextMonthDay:)])

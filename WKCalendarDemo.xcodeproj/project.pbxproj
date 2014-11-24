@@ -34,6 +34,7 @@
 		EB68C58E19BEAEBA0017E28F /* WKCalendarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */; };
 		EB80365019D7F4A80034B2F1 /* WKCalendarYearMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */; };
 		EBA0FCD719D7A8F00052BD22 /* WKCalendarDayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */; };
+		EBB4EF181A23050F002C46E0 /* PanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4EF171A23050F002C46E0 /* PanelView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,9 +91,11 @@
 		EB68C58D19BEAEBA0017E28F /* WKCalendarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarViewCell.m; path = WKCalendar/WKCalendarViewCell.m; sourceTree = "<group>"; };
 		EB80364E19D7F4A80034B2F1 /* WKCalendarYearMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarYearMonthView.h; path = WKCalendar/WKCalendarYearMonthView.h; sourceTree = "<group>"; };
 		EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarYearMonthView.m; path = WKCalendar/WKCalendarYearMonthView.m; sourceTree = "<group>"; };
-		EB8973AB19E61F2100772B7C /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../Company/branches/Dev/EHRMobile/EHRMobile/Custom/WKCalendar/Macros.h; sourceTree = "<group>"; };
 		EBA0FCD519D7A8F00052BD22 /* WKCalendarDayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WKCalendarDayView.h; path = WKCalendar/WKCalendarDayView.h; sourceTree = "<group>"; };
 		EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WKCalendarDayView.m; path = WKCalendar/WKCalendarDayView.m; sourceTree = "<group>"; };
+		EBB4EF161A23050F002C46E0 /* PanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PanelView.h; path = WKCalendar/Panel/PanelView.h; sourceTree = "<group>"; };
+		EBB4EF171A23050F002C46E0 /* PanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PanelView.m; path = WKCalendar/Panel/PanelView.m; sourceTree = "<group>"; };
+		EBB4EF191A2305EE002C46E0 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macro.h; path = WKCalendar/Macro.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +218,11 @@
 		EB68C58519BEAA140017E28F /* WKCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				EBB4EF191A2305EE002C46E0 /* Macro.h */,
+				EBB4EF151A2304FE002C46E0 /* Panel */,
+				EBB4EF111A22FCFB002C46E0 /* TimePicker */,
+				EBB4EF101A22FCF2002C46E0 /* DatePicker */,
+				EBB4EF0F1A22FCD8002C46E0 /* DateTimePicker */,
 				EB40E4D819D3E234006BB2FF /* DateTime */,
 				EB68C58919BEAA680017E28F /* WKCalendarView.h */,
 				EB68C58A19BEAA680017E28F /* WKCalendarView.m */,
@@ -230,9 +238,38 @@
 				EBA0FCD619D7A8F00052BD22 /* WKCalendarDayView.m */,
 				EB80364E19D7F4A80034B2F1 /* WKCalendarYearMonthView.h */,
 				EB80364F19D7F4A80034B2F1 /* WKCalendarYearMonthView.m */,
-				EB8973AB19E61F2100772B7C /* Macros.h */,
 			);
 			name = WKCalendar;
+			sourceTree = "<group>";
+		};
+		EBB4EF0F1A22FCD8002C46E0 /* DateTimePicker */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = DateTimePicker;
+			sourceTree = "<group>";
+		};
+		EBB4EF101A22FCF2002C46E0 /* DatePicker */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = DatePicker;
+			sourceTree = "<group>";
+		};
+		EBB4EF111A22FCFB002C46E0 /* TimePicker */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = TimePicker;
+			sourceTree = "<group>";
+		};
+		EBB4EF151A2304FE002C46E0 /* Panel */ = {
+			isa = PBXGroup;
+			children = (
+				EBB4EF161A23050F002C46E0 /* PanelView.h */,
+				EBB4EF171A23050F002C46E0 /* PanelView.m */,
+			);
+			name = Panel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,6 +369,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBB4EF181A23050F002C46E0 /* PanelView.m in Sources */,
 				EB40E4E719D3E3E9006BB2FF /* WKDateTimeHeaderView.m in Sources */,
 				EB50AC4019D0192B004EE10B /* ArrowButton.m in Sources */,
 				EB80365019D7F4A80034B2F1 /* WKCalendarYearMonthView.m in Sources */,

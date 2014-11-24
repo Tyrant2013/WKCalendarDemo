@@ -165,7 +165,7 @@
     {
         textColor = UIColor.whiteColor;
     }
-    NSString *text = [NSString stringWithFormat:@"%d", self.day];
+    NSString *text = [NSString stringWithFormat:@"%ld", (long)self.day];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
     paragraphStyle.alignment = NSTextAlignmentCenter;
